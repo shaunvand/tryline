@@ -14,10 +14,21 @@ import { renderPitch } from "./ui/pitch.js";
 import { renderFixtures } from "./ui/fixtures.js";
 import { renderGlossary, loadGlossary } from "./ui/glossary.js";
 import { diffEvents, formatAlert, showToast, notify, requestPermission } from "./ui/alerts.js";
+import { getTimeZone, setTimeZone, tzLabel, tzOptions } from "./time.js";
+import { loadFollowed, toggleFollow, isFollowed, matchInvolvesFollowed } from "./follow.js";
+import { renderFollowButton, renderFollowedChips } from "./ui/follow.js";
+import { activeCards, playerCounts } from "./model/sinbin.js";
+import { latestExplainer } from "./model/explain.js";
+import { renderSinBin } from "./ui/sinbin.js";
+import { renderExplainer } from "./ui/explain.js";
+import { renderPlayers } from "./ui/players.js";
+import { setBroadcastData, renderWatch, renderForm, countryOptions, detectCountry } from "./ui/watch.js";
+import { setCoverageData, renderCoverage, renderCoverageNote } from "./ui/coverage.js";
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const hhmmss = ms => new Date(ms).toLocaleTimeString("en-GB", { timeZone: "Africa/Johannesburg", hour12: false });
+// clock times follow the user's time zone (time.js; device zone by default)
+const hhmmss = ms => new Date(ms).toLocaleTimeString("en-GB", { hour12: false, ...(getTimeZone() ? { timeZone: getTimeZone() } : {}) });
 const LAST_KEY = "tryline.lastMatch";
 const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch { /* ignore */ } };
@@ -27,6 +38,19 @@ let settings = loadSettings();
 let ratings = null;
 fetch(new URL("./model/ratings.json", import.meta.url)).then(r => (r.ok ? r.json() : null))
   .then(r => { ratings = r; rerenderMatch(); }).catch(() => {});
+// static JSON (no JSON modules without a build): broadcast + coverage tables
+const getJson = path => fetch(new URL(path, document.baseURI)).then(r => (r.ok ? r.json() : null)).catch(() => null);
+getJson("data/broadcast.json").then(j => { setBroadcastData(j); rerenderMatch(); });
+getJson("data/coverage.json").then(j => { setCoverageData(j); rerenderMatch(); if (store.get().view === "coverage") routeCoverage(); });
+const country = () => settings.country || detectCountry();
+
+// explainer cards the user closed (this tab only)
+const DISMISS_KEY = "tl.dismissedExplainers";
+const dismissed = (() => { try { return new Set(JSON.parse(sessionStorage.getItem(DISMISS_KEY) || "[]")); } catch { return new Set(); } })();
+function dismissExplainer(id) {
+  dismissed.add(String(id));
+  try { sessionStorage.setItem(DISMISS_KEY, JSON.stringify([...dismissed])); } catch { /* ignore */ }
+}
 
 // ---- replay module is optional (built in parallel); a missing file only disables replays ----
 let replayMod;
@@ -75,7 +99,7 @@ function startPolling(fn, baseMs) {
 document.addEventListener("visibilitychange", () => { if (!document.hidden && poll) poll.tick(); });
 
 // ---- views ----
-const VIEWS = ["fixtures", "match", "glossary", "settings"];
+const VIEWS = ["fixtures", "match", "glossary", "settings", "coverage"];
 function show(view) {
   for (const v of VIEWS) $(`#view-${v}`)?.classList.toggle("tl-hidden", v !== view);
   document.querySelectorAll("#tl-nav a").forEach(a => a.classList.toggle("active", a.dataset.nav === view));
@@ -100,10 +124,15 @@ async function renderFixturesView() {
   if (!st.fixtures) { if (banner && st.view === "fixtures") $("#view-fixtures").innerHTML = banner; return; }
   const replays = await replayList();
   if (store.get().view !== "fixtures") return;
-  $("#view-fixtures").innerHTML = banner + renderFixtures({ fixtures: st.fixtures, selectedLeagueIds: settings.leagues, nowMs: Date.now(), replays }) +
-    `<p class="tl-src">Times in SAST · updated ${esc(hhmmss(st.fixturesAt))} · ESPN + World Rugby public feeds</p>`;
+  const followed = loadFollowed();
+  const teamsSeen = st.fixtures.flatMap(f => [f.home, f.away]).filter(Boolean);
+  $("#view-fixtures").innerHTML = banner + renderFollowedChips(followed, teamsSeen) +
+    renderFixtures({ fixtures: st.fixtures, selectedLeagueIds: settings.leagues, nowMs: Date.now(), replays, followed }) +
+    `<p class="tl-src">Times in ${esc(tzLabel())} · updated ${esc(hhmmss(st.fixturesAt))} · ESPN + World Rugby public feeds</p>`;
 }
 $("#view-fixtures").addEventListener("click", e => {
+  const u = e.target.closest("button[data-unfollow]");
+  if (u) { toggleFollow(u.dataset.unfollow); renderFixturesView(); return; }
   const b = e.target.closest("button[data-league]");
   if (!b) return;
   settings = toggleLeague(b.dataset.league);
@@ -126,7 +155,9 @@ const remember = (e, m) => alerted.push({ type: e.type, side: sideOf(e, m), sec:
 
 function fireAlert(event, m) {
   const a = formatAlert(event, m);
-  if (!(settings.notify && notify(a))) showToast($("#tl-toasts"), a);
+  // "only teams I follow" gates the system notification; the in-app toast always shows
+  const wanted = !settings.alertFollowedOnly || matchInvolvesFollowed(m, loadFollowed());
+  if (!(settings.notify && wanted && notify(a))) showToast($("#tl-toasts"), a);
 }
 
 function applyMatch(m, key) {
@@ -165,9 +196,11 @@ function rerenderMatch() {
     head.classList.remove("tl-skeleton");
     head.innerHTML = `<p>No match open.</p><p><a class="tl-btn" href="#/">Pick a match from Fixtures</a></p>`;
     for (const t of ["timeline", "pitch", "stats", "lineups"]) $(`#tab-${t}`).innerHTML = "";
+    $("#match-explainer").innerHTML = "";
     return;
   }
   if (!m) {
+    $("#match-explainer").innerHTML = "";
     head.classList.toggle("tl-skeleton", !matchErr);
     head.innerHTML = matchErr
       ? `<p class="tl-err">Could not load this match: ${esc(matchErr)}</p><p class="tl-src">Retrying automatically. <a href="#/">Back to fixtures</a></p>`
@@ -181,18 +214,33 @@ function rerenderMatch() {
   const stale = !isReplay && m.status?.state === "in" && okAt && Date.now() - okAt > 2 * 15e3;
   head.classList.remove("tl-skeleton");
   head.classList.toggle("tl-stale", !!stale);
+  const followed = loadFollowed();
+  let cards = [];
+  try { cards = activeCards(m); } catch (e) { console.warn("sinbin", e); }
+  const leagueId = m.league?.id;
   head.innerHTML = renderHeader({ match: m, prob }) +
+    `<div class="tl-follow-row">${renderFollowButton(m.home, isFollowed(m.home, followed))}<span class="tl-muted tl-follow-cap">Follow</span>${renderFollowButton(m.away, isFollowed(m.away, followed))}</div>` +
+    (cards.length ? renderSinBin({ match: m, cards, counts: playerCounts(m) }) +
+      (m.status?.clockSource === "estimated" ? `<p class="tl-src">Sin-bin times use the estimated clock</p>` : "") : "") +
+    renderWatch({ leagueId, country: country() }) +
+    renderForm({ match: m }) +
     (stale ? `<p class="tl-err tl-stale-msg" role="status">Data stale since ${esc(hhmmss(okAt))} · retrying</p>` : "") +
     (src.degraded?.length ? `<p class="tl-err tl-stale-msg">Feed degraded, showing last ${esc(src.degraded.join(", "))}</p>` : "") +
     `<p class="tl-src">${esc(SRC[src.name] || src.name || "")}${src.fetchedAt && !isReplay ? " · updated " + esc(hhmmss(Date.parse(src.fetchedAt))) : ""}` +
-    `${src.note ? " · " + esc(src.note) : ""}</p>`;
+    `${src.note ? " · " + esc(src.note) : ""}</p>` +
+    renderCoverageNote(leagueId);
+  let ex = null;
+  try { ex = latestExplainer(m, m.status?.clockSec); } catch (e) { console.warn("explainer", e); }
+  $("#match-explainer").innerHTML = ex && !dismissed.has(String(ex.event.id)) ? renderExplainer({ ex: ex.ex, event: ex.event, match: m }) : "";
   if (tab === "timeline") $("#tab-timeline").innerHTML = renderTimeline({ match: m });
   if (tab === "pitch") {
     let zone = null, mom = null;
     try { zone = estimateZone(m); mom = momentum(m); } catch (e) { console.warn("pitch model", e); }
     $("#tab-pitch").innerHTML = renderPitch({ match: m, zone, momentum: mom });
   }
-  if (tab === "stats") $("#tab-stats").innerHTML = renderStats({ match: { ...m, stats: displayStats(m.stats) }, derived: deriveCounts(m) });
+  // Players live inside Stats (raw m: displayStats strips stats.players); keeps the tab strip at 4 for 390px screens
+  if (tab === "stats") $("#tab-stats").innerHTML = renderStats({ match: { ...m, stats: displayStats(m.stats) }, derived: deriveCounts(m) }) +
+    `<h3 class="tl-pl-head" id="players">Players</h3>` + renderPlayers({ match: m, nowSec: m.status?.clockSec });
   if (tab === "lineups") $("#tab-lineups").innerHTML = renderLineups({ match: m });
   const H = m.home.abbr || m.home.name, A = m.away.abbr || m.away.name;
   document.title = m.status?.state === "pre" ? `${H} v ${A} · TryLine`
@@ -206,6 +254,13 @@ function setTab(tab) {
   rerenderMatch();
 }
 $("#match-tabs").addEventListener("click", e => { const b = e.target.closest("button[data-tab]"); if (b) setTab(b.dataset.tab); });
+// header/explainer HTML is rebuilt on every update, so delegate from the view
+$("#view-match").addEventListener("click", e => {
+  const f = e.target.closest("button[data-follow]");
+  if (f) { toggleFollow({ name: f.dataset.name }); rerenderMatch(); return; }
+  const x = e.target.closest("[data-dismiss-explainer]");
+  if (x) { dismissExplainer(x.dataset.dismissExplainer); $("#match-explainer").innerHTML = ""; }
+});
 
 function openMatch(key) {
   alerted = [];
@@ -289,8 +344,9 @@ async function routeReplay(slug) {
 }
 
 // ---- glossary ----
-async function routeGlossary() {
+async function routeGlossary(q) {
   show("glossary");
+  if (q != null) $("#glossary-q").value = q;
   try { await loadGlossary(); } catch { $("#glossary-list").innerHTML = `<p class="tl-err">Glossary could not load.</p>`; return; }
   renderGlossaryList();
 }
@@ -301,11 +357,26 @@ function renderGlossaryList() {
 }
 $("#glossary-q").addEventListener("input", () => { if (store.get().view === "glossary") renderGlossaryList(); });
 
+// ---- coverage ----
+function routeCoverage() {
+  show("coverage");
+  $("#view-coverage").innerHTML = renderCoverage();
+}
+
 // ---- settings ----
+const opt = (value, label, sel) => `<option value="${esc(value)}"${sel ? " selected" : ""}>${esc(label)}</option>`;
 function syncSettingsForm() {
   $("#opt-notify").checked = settings.notify;
   $("#opt-speed").value = String(settings.speed);
+  $("#opt-followed-only").checked = settings.alertFollowedOnly;
+  const tz = getTimeZone() || "";
+  $("#opt-tz").innerHTML = tzOptions().map(o => opt(o.value || "", o.value ? o.label : `${o.label} (${tzLabel()})`, (o.value || "") === tz)).join("");
+  const c = country();
+  $("#opt-country").innerHTML = countryOptions().map(o => opt(o.value, o.label, o.value === c)).join("");
 }
+$("#opt-followed-only").addEventListener("change", e => { settings = saveSettings({ alertFollowedOnly: e.target.checked }); });
+$("#opt-tz").addEventListener("change", e => { setTimeZone(e.target.value || null); syncSettingsForm(); });
+$("#opt-country").addEventListener("change", e => { settings = saveSettings({ country: e.target.value }); });
 $("#opt-notify").addEventListener("change", async e => {
   const on = e.target.checked;
   if (on) await requestPermission(); // in-app toasts still work if this is denied
@@ -331,7 +402,9 @@ addEventListener("appinstalled", () => $("#tl-install").classList.add("tl-hidden
 
 // ---- router ----
 function route() {
-  const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
+  const [path, query = ""] = location.hash.replace(/^#\/?/, "").split("?");
+  const params = new URLSearchParams(query);
+  const parts = path.split("/").filter(Boolean).map(decodeURIComponent);
   stopPolling();
   stopReplay();
   document.title = "TryLine";
@@ -345,7 +418,8 @@ function route() {
     return rerenderMatch();
   }
   if (head === "replay" && a) return routeReplay(a);
-  if (head === "glossary") return routeGlossary();
+  if (head === "glossary") return routeGlossary(params.get("q"));
+  if (head === "coverage") return routeCoverage();
   if (head === "settings") { syncSettingsForm(); return show("settings"); }
   show("fixtures");
   if (store.get().fixtures) renderFixturesView();

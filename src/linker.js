@@ -101,7 +101,7 @@ export function mergeMatch(espn, wr, swapped = false) {
   return { ...espn, status,
     home: { ...espn.home, score: hs },
     away: { ...espn.away, score: as },
-    events, lineups, stats: sw(wr.stats) || espn.stats,
+    events, lineups, stats: wr.stats ? { ...wr.stats, ...sw(wr.stats), ...(wr.stats.players ? { players: sw(wr.stats.players) } : {}) } : espn.stats,
     source: { name: "espn+wr", fetchedAt: espn.source?.fetchedAt || wr.source?.fetchedAt, espnId: espn.id, wrId: wr.id,
       note: `ESPN (ids, logos, kickoff) + World Rugby (clock, stats${events === wrEvents ? ", events" : ""}); ESPN ~20-40 s behind TV` } };
 }

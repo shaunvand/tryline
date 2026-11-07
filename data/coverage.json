@@ -1,0 +1,184 @@
+{
+ "note": "What the free data feed gives us, per competition",
+ "updated": "2026-11-07",
+ "leagues": {
+  "17567": {
+   "live": [
+    "score",
+    "events",
+    "lineups",
+    "real clock",
+    "team stats",
+    "player stats"
+   ],
+   "estimated": [],
+   "missing": []
+  },
+  "164205": {
+   "live": [
+    "score",
+    "events",
+    "lineups",
+    "real clock",
+    "team stats",
+    "player stats"
+   ],
+   "estimated": [],
+   "missing": []
+  },
+  "180659": {
+   "live": [
+    "score",
+    "events",
+    "lineups",
+    "real clock",
+    "team stats",
+    "player stats"
+   ],
+   "estimated": [],
+   "missing": []
+  },
+  "242041": {
+   "live": [
+    "score",
+    "events",
+    "lineups"
+   ],
+   "estimated": [
+    "clock"
+   ],
+   "missing": [
+    "possession (not in the free feed)",
+    "territory (not in the free feed)"
+   ]
+  },
+  "244293": {
+   "live": [
+    "score",
+    "events",
+    "lineups",
+    "real clock",
+    "team stats",
+    "player stats"
+   ],
+   "estimated": [],
+   "missing": []
+  },
+  "267979": {
+   "live": [
+    "score",
+    "events",
+    "lineups"
+   ],
+   "estimated": [
+    "clock"
+   ],
+   "missing": [
+    "possession (not in the free feed)",
+    "territory (not in the free feed)"
+   ]
+  },
+  "270555": {
+   "live": [],
+   "estimated": [],
+   "missing": [
+    "everything"
+   ],
+   "note": "Not available (feed stale since 2022)"
+  },
+  "270557": {
+   "live": [
+    "score",
+    "events",
+    "lineups"
+   ],
+   "estimated": [
+    "clock"
+   ],
+   "missing": [
+    "possession (not in the free feed)",
+    "territory (not in the free feed)"
+   ]
+  },
+  "270559": {
+   "live": [
+    "score",
+    "events",
+    "lineups",
+    "real clock",
+    "team stats",
+    "player stats"
+   ],
+   "estimated": [],
+   "missing": []
+  },
+  "270563": {
+   "live": [
+    "score",
+    "events",
+    "lineups"
+   ],
+   "estimated": [
+    "clock"
+   ],
+   "missing": [
+    "possession (not in the free feed)",
+    "territory (not in the free feed)"
+   ]
+  },
+  "271937": {
+   "live": [
+    "score",
+    "events",
+    "lineups"
+   ],
+   "estimated": [
+    "clock"
+   ],
+   "missing": [
+    "possession (not in the free feed)",
+    "territory (not in the free feed)"
+   ]
+  },
+  "272073": {
+   "live": [
+    "score",
+    "events",
+    "lineups"
+   ],
+   "estimated": [
+    "clock"
+   ],
+   "missing": [
+    "possession (not in the free feed)",
+    "territory (not in the free feed)"
+   ]
+  },
+  "289234": {
+   "live": [
+    "score",
+    "events",
+    "lineups",
+    "real clock",
+    "team stats",
+    "player stats"
+   ],
+   "estimated": [],
+   "missing": []
+  },
+  "289262": {
+   "live": [
+    "score",
+    "events",
+    "lineups"
+   ],
+   "estimated": [
+    "clock"
+   ],
+   "missing": [
+    "possession (not in the free feed)",
+    "territory (not in the free feed)"
+   ]
+  }
+ }
+}

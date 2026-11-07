@@ -47,3 +47,31 @@ noscript .tl-card{margin:70px 12px}
 .tl-src{margin:10px 0 0;font-size:.72rem;color:var(--muted);text-align:center}
 .tl-prob-cap{font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:4px}
 .tl-err{color:var(--red)}
+/* integrator: quick wins (sin bin, explainer, follow, players, watch, coverage) */
+.tl-muted{color:var(--muted)}
+.tl-sinbin .tl-chip{cursor:default;color:var(--fg)}
+.tl-sb-pill{border-color:var(--yellow)}
+.tl-sb-count{font-weight:700}
+.tl-explainer{position:relative;border-left:4px solid var(--accent);padding-right:44px}
+.tl-explainer-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.tl-explainer-x{position:absolute;top:8px;right:8px;width:32px;height:32px;padding:0;border-radius:50%;background:var(--card2);color:var(--fg);font-size:1.1rem;line-height:1}
+.tl-explainer p{margin:.35rem 0;font-size:.9rem}
+.tl-follow-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:6px 0 2px}
+.tl-follow{background:var(--card2);color:var(--muted);padding:4px 10px;font-size:.85rem;font-weight:600;min-height:32px}
+.tl-follow.tl-on{color:var(--yellow);border:1px solid var(--yellow)}
+.tl-fx-star{color:var(--yellow);margin-left:3px;font-size:.85em}
+.tl-follow-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.tl-follow-chip{color:var(--fg);cursor:default}
+.tl-follow-x{background:none;border:0;color:var(--muted);font-size:1rem;padding:0 0 0 4px;cursor:pointer;line-height:1}
+.tl-watch,.tl-cov-note{font-size:.8rem;margin:6px 0 0}
+.tl-form-row{display:flex;align-items:center;gap:8px;margin:4px 0}.tl-form-team{min-width:3.5em;font-weight:700;font-size:.85rem}
+.tl-h2h{font-size:.8rem}
+.tl-pl-head{margin:16px 0 8px}
+.tl-pl-top .tl-pl-row{padding:6px 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.tl-pl-table{border-collapse:collapse;font-size:.8rem;width:100%}
+.tl-pl-table th,.tl-pl-table td{padding:4px 6px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line)}
+.tl-pl-table th{color:var(--muted);font-weight:600}
+.tl-pl-team summary{cursor:pointer;font-weight:700}
+.tl-pl-foot{font-size:.72rem;text-align:center}
+.tl-cov .tl-chip{cursor:default;margin:2px 0}.tl-cov .tl-chip.tl-cov-live{color:var(--accent)}.tl-cov .tl-chip.tl-cov-est{color:var(--yellow)}.tl-cov .tl-chip.tl-cov-miss{color:var(--red)}
+#match-header .tl-form{margin:10px 0 0;padding:10px;background:var(--card2)}

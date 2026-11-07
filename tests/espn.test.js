@@ -137,3 +137,16 @@ test("header score follows the play feed when the scoreboard lags", () => {
   assert.deepEqual(m.source.partial, []);
   assert.deepEqual(buildMatch({ sbEvent, plays: null, summary: null, leagueId: "17567", nowMs: KICK }).source.partial, ["plays", "summary"]);
 });
+
+test("buildMatch adds form and h2h", () => {
+  const m = buildMatch({ sbEvent, plays, summary, leagueId: "17567", nowMs: KICK });
+  assert.equal(m.form.home.length, 5);
+  assert.ok(m.form.home.every(r => "WLD".includes(r)) && m.form.away.every(r => "WLD".includes(r)));
+  assert.deepEqual(m.form.home.slice(0, 2), ["L", "L"]);
+  assert.equal(m.h2h.played, 3);
+  assert.equal(m.h2h.draws, 1);
+  assert.equal(m.h2h.last[0].hs, 0);
+  const none = buildMatch({ sbEvent, plays, summary: null, leagueId: "17567", nowMs: KICK });
+  assert.deepEqual(none.form, { home: [], away: [] });
+  assert.equal(none.h2h, null);
+});

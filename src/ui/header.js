@@ -1,3 +1,4 @@
+import { fmtTime, fmtDay, tzLabel } from "../time.js";
 // Match header: crests, score, status chip, clock, win-probability bar. Pure: returns HTML string.
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const pct = (p) => Math.round((Number(p) || 0) * 100);
@@ -12,10 +13,9 @@ function crest(t, side) {
 }
 
 export function kickoffLabel(iso) {
-  const d = new Date(iso);
-  if (!iso || isNaN(d)) return "Kick-off TBC";
-  const f = new Intl.DateTimeFormat("en-ZA", { timeZone: "Africa/Johannesburg", weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hour12: false });
-  return "Kick-off " + f.format(d) + " SAST";
+  const t = Date.parse(iso);
+  if (!iso || !Number.isFinite(t)) return "Kick-off TBC";
+  return `Kick-off ${fmtDay(t)} ${fmtTime(t)} ${tzLabel(t)}`;
 }
 
 function chip(m) {

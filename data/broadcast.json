@@ -1,0 +1,468 @@
+{
+ "note": "Check your provider; rights change each season",
+ "updated": "2026-11-07",
+ "season": "2026-27",
+ "leagues": {
+  "17567": {
+   "ZA": {
+    "name": "SuperSport (DStv); SABC free-to-air for some Springbok Tests",
+    "url": "https://www.sabcsport.com/",
+    "verified": false
+   },
+   "GB": {
+    "name": "ITV / TNT Sports",
+    "url": "https://www.itv.com/watch/sport",
+    "verified": false
+   },
+   "IE": {
+    "name": "RTÉ / Virgin Media",
+    "url": "https://www.rte.ie/sport/rugby/",
+    "verified": false
+   },
+   "FR": {
+    "name": "Canal+ / France TV",
+    "url": "https://www.canalplus.com/sport/rugby/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport / Nine",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "FloRugby / Peacock",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  },
+  "164205": {
+   "ZA": {
+    "name": "SuperSport (DStv)",
+    "url": "https://supersport.com/rugby",
+    "verified": false
+   },
+   "GB": {
+    "name": "ITV",
+    "url": "https://www.itv.com/watch/sport",
+    "verified": false
+   },
+   "IE": {
+    "name": "RTÉ / Virgin Media",
+    "url": "https://www.rte.ie/sport/rugby/",
+    "verified": false
+   },
+   "FR": {
+    "name": "TF1 / France TV",
+    "url": "https://www.france.tv/sport/rugby/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport / Nine",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "Peacock",
+    "url": "https://www.peacocktv.com/",
+    "verified": false
+   }
+  },
+  "180659": {
+   "ZA": {
+    "name": "SuperSport (DStv)",
+    "url": "https://supersport.com/rugby",
+    "verified": false
+   },
+   "GB": {
+    "name": "BBC / ITV",
+    "url": "https://www.bbc.co.uk/sport/rugby-union",
+    "verified": false
+   },
+   "IE": {
+    "name": "RTÉ / Virgin Media",
+    "url": "https://www.rte.ie/sport/rugby/",
+    "verified": false
+   },
+   "FR": {
+    "name": "France TV",
+    "url": "https://www.france.tv/sport/rugby/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "Peacock",
+    "url": "https://www.peacocktv.com/",
+    "verified": false
+   }
+  },
+  "242041": {
+   "ZA": {
+    "name": "SuperSport (DStv)",
+    "url": "https://supersport.com/rugby",
+    "verified": false
+   },
+   "GB": {
+    "name": "Sky Sports / TNT Sports",
+    "url": "https://www.skysports.com/rugby-union",
+    "verified": false
+   },
+   "IE": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": false
+   },
+   "FR": {
+    "name": "Canal+",
+    "url": "https://www.canalplus.com/sport/rugby/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport / Nine",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "Fox / FloRugby",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  },
+  "244293": {
+   "ZA": {
+    "name": "SuperSport (DStv); SABC free-to-air for some Springbok Tests",
+    "url": "https://www.sabcsport.com/",
+    "verified": false
+   },
+   "GB": {
+    "name": "TNT Sports / Premier Sports",
+    "url": "https://www.tntsports.co.uk/",
+    "verified": false
+   },
+   "IE": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": false
+   },
+   "FR": {
+    "name": "Canal+ / France TV",
+    "url": "https://www.canalplus.com/sport/rugby/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport / Nine",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "FloRugby / Peacock",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  },
+  "267979": {
+   "ZA": {
+    "name": "SuperSport (DStv)",
+    "url": "https://supersport.com/rugby",
+    "verified": false
+   },
+   "GB": {
+    "name": "TNT Sports",
+    "url": "https://www.tntsports.co.uk/",
+    "verified": true,
+    "detail": "Selected matches free-to-air on ITV",
+    "source": "https://www.advanced-television.com/2026/03/31/watching-rugby-in-the-uk-tv-and-streaming-options/"
+   },
+   "IE": {
+    "name": "TNT Sports",
+    "url": "https://www.tntsports.co.uk/",
+    "verified": false
+   },
+   "FR": {
+    "name": "TNT Sports (via Prime / Canal)",
+    "url": "https://www.tntsports.co.uk/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "Peacock / FloRugby",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  },
+  "270555": {
+   "ZA": {
+    "name": "SuperSport (DStv)",
+    "url": "https://supersport.com/rugby",
+    "verified": true,
+    "source": "https://www.sportcal.com/news/sa-rugby-and-supersport-extend-domestic-club-competitions-deal/"
+   }
+  },
+  "270557": {
+   "ZA": {
+    "name": "SuperSport (DStv)",
+    "url": "https://supersport.com/rugby",
+    "verified": true,
+    "source": "https://springboks.rugby/news-features/articles/2026/6/3/supersport-and-dstv-extend-exclusive-vodacom-urc-rights-in-sub-saharan-africa"
+   },
+   "GB": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": true,
+    "detail": "Select fixtures free on S4C / BBC iPlayer",
+    "source": "https://glasgowwarriors.org/premier-sports-expands-coverage-of-bkt-united-rugby-championship-until-2029"
+   },
+   "IE": {
+    "name": "Premier Sports / RTÉ / Virgin Media",
+    "url": "https://www.premiersports.com/",
+    "verified": false
+   },
+   "FR": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "URC.tv",
+    "url": "https://www.unitedrugby.com/",
+    "verified": false
+   }
+  },
+  "270559": {
+   "ZA": {
+    "name": "ESPN Africa / SABC",
+    "url": "https://www.espn.co.za/",
+    "verified": false
+   },
+   "GB": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": false
+   },
+   "IE": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": false
+   },
+   "FR": {
+    "name": "Canal+",
+    "url": "https://www.canalplus.com/sport/rugby/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "beIN Sports / FloRugby",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  },
+  "270563": {
+   "ZA": {
+    "name": "SuperSport (DStv)",
+    "url": "https://supersport.com/rugby",
+    "verified": false
+   },
+   "GB": {
+    "name": "Sky Sports",
+    "url": "https://www.skysports.com/rugby-union",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "FloRugby",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  },
+  "271937": {
+   "ZA": {
+    "name": "SuperSport (DStv)",
+    "url": "https://supersport.com/rugby",
+    "verified": false
+   },
+   "GB": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": true,
+    "detail": "Covers all 63 matches through 2026-27",
+    "source": "https://www.advanced-television.com/?p=266759"
+   },
+   "IE": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": false
+   },
+   "FR": {
+    "name": "Canal+ / beIN",
+    "url": "https://www.canalplus.com/sport/rugby/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "Peacock / FloRugby",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  },
+  "272073": {
+   "ZA": {
+    "name": "SuperSport (DStv)",
+    "url": "https://supersport.com/rugby",
+    "verified": false
+   },
+   "GB": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": false
+   },
+   "IE": {
+    "name": "Premier Sports",
+    "url": "https://www.premiersports.com/",
+    "verified": false
+   },
+   "FR": {
+    "name": "Canal+ / beIN",
+    "url": "https://www.canalplus.com/sport/rugby/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "Peacock / FloRugby",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  },
+  "289234": {
+   "ZA": {
+    "name": "SuperSport (DStv); SABC free-to-air for some Springbok Tests",
+    "url": "https://www.sabcsport.com/",
+    "verified": false
+   },
+   "GB": {
+    "name": "ITV / TNT Sports",
+    "url": "https://www.itv.com/watch/sport",
+    "verified": false
+   },
+   "IE": {
+    "name": "RTÉ / Virgin Media",
+    "url": "https://www.rte.ie/sport/rugby/",
+    "verified": false
+   },
+   "FR": {
+    "name": "Canal+ / France TV",
+    "url": "https://www.canalplus.com/sport/rugby/",
+    "verified": false
+   },
+   "AU": {
+    "name": "Stan Sport / Nine",
+    "url": "https://www.stan.com.au/sport",
+    "verified": false
+   },
+   "NZ": {
+    "name": "Sky Sport NZ",
+    "url": "https://www.sky.co.nz/sky-sport",
+    "verified": false
+   },
+   "US": {
+    "name": "FloRugby / Peacock",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  },
+  "289262": {
+   "GB": {
+    "name": "TNT Sports",
+    "url": "https://www.tntsports.co.uk/",
+    "verified": false
+   },
+   "US": {
+    "name": "Fox Sports / FloRugby",
+    "url": "https://www.flo.rugby/",
+    "verified": false
+   }
+  }
+ }
+}

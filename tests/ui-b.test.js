@@ -1,4 +1,5 @@
 import test from "node:test";
+import { setTimeZone } from "../src/time.js";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { renderPitch, zoneName } from "../src/ui/pitch.js";
@@ -31,6 +32,7 @@ test("zoneName", () => {
 });
 
 test("fixtures: live first, SAST time, hrefs", () => {
+  setTimeZone("Africa/Johannesburg"); // deterministic on any machine
   const now = Date.parse("2026-11-07T08:00:00Z");
   const fx = [
     { id: "a", leagueId: "L1", leagueName: "League <1>", kickoff: "2026-11-07T14:10:00Z", home: { abbr: "AAA" }, away: { abbr: "BBB" }, status: { state: "pre" } },

@@ -119,6 +119,19 @@ const STAT_KEYS = { possession: "Possession", territory: "Territory", possession
   turnoversConceded: "TurnoversConceded", kickSuccess: "KickSuccess", kicksFromHand: "KicksFromHand",
   yellowCards: "YellowCards", redCards: "RedCards" };
 
+// Per-player lines. Feed key names are inspected from tests/fixtures/wr_stats.json; absent key -> null.
+const pv = (st, k) => (num(st?.[k]) != null ? Number(st[k]) : null);
+function playerLine(p) {
+  const st = p.stats || {};
+  const pens = (num(st.PenDefs) != null || num(st.PenOffs) != null) ? (Number(st.PenDefs) || 0) + (Number(st.PenOffs) || 0) : null;
+  return { id: String(p.player?.id ?? ""), name: playerName(p.player), number: parseInt(p.number, 10) || null,
+    position: p.positionLabel || p.position || "", tries: pv(st, "Tries"), points: pv(st, "Points"), carries: pv(st, "Carries"),
+    metres: pv(st, "Metres"), defendersBeaten: pv(st, "DefendersBeaten"), cleanBreaks: pv(st, "CleanBreaks"),
+    offloads: pv(st, "Offload"), passes: pv(st, "Passes"), tackles: pv(st, "Tackles"), missedTackles: pv(st, "MissedTackles"),
+    turnoversWon: pv(st, "TurnoverWon"), penaltiesConceded: pens, kicksFromHand: pv(st, "KicksFromHand"),
+    lineoutsWon: pv(st, "LineoutsWon") };
+}
+
 function sideStats(ts) {
   const raw = ts?.stats || {};
   const out = {};
@@ -137,7 +150,8 @@ function buildStats(stats, teams) {
   const ts = stats?.teamStats;
   if (!Array.isArray(ts) || !ts.length) return null;
   const pick = i => ts.find(x => x.teamId != null && String(x.teamId) === String(teams[i]?.id)) || ts[i];
-  return { home: sideStats(pick(0)), away: sideStats(pick(1)) };
+  const players = { home: (pick(0)?.playerStats || []).map(playerLine), away: (pick(1)?.playerStats || []).map(playerLine) };
+  return { home: sideStats(pick(0)), away: sideStats(pick(1)), players };
 }
 
 export function buildWrMatch({ summary, stats, timeline, nowMs } = {}) {
@@ -176,6 +190,7 @@ export function buildWrMatch({ summary, stats, timeline, nowMs } = {}) {
   });
   // half-time subs share 40' with early 2nd-half events: order by half, then clock, then feed order
   events.sort((a, b) => (a.period - b.period) || (a.clockSec - b.clockSec) || (a.seq - b.seq));
+  events.forEach((e, i) => { e.seq = i; }); // renderers sort by seq, so it must follow the half order
   return {
     id: String(m.matchId ?? ""), league: { id: String(m.events?.[0]?.id ?? ""), name: m.events?.[0]?.label || m.competition || "" },
     kickoff: m.time?.millis != null ? new Date(m.time.millis).toISOString().replace(/:\d\d\.\d+Z$/, "Z") : null,

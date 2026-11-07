@@ -2,6 +2,15 @@
 
 Mobile-first live-rugby second-screen PWA: scores, timeline, estimated pitch position, win-probability model, lineups, glossary. Plain ES modules, no build, no dependencies. See `ARCHITECTURE.md`.
 
+## What's new (2026-11-07)
+- Sin-bin strip: active yellow/red cards with time left and players on the pitch.
+- "What just happened" card for the latest score or card, with a link to the glossary entry.
+- Follow teams (star in the match header): "Your teams" group in Fixtures, optional alerts for followed teams only.
+- Players section in Stats: top performers and per-team stats (World Rugby-covered matches).
+- Where to watch, recent form and head-to-head in the match header.
+- Time-zone and country settings; all kick-off times follow the chosen zone (device zone by default).
+- Data coverage page (`#/coverage`) and glossary deep links (`#/glossary?q=Try`).
+
 ## Run locally
 ```
 python -m http.server 8787

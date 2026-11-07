@@ -151,6 +151,27 @@ function scoreFromEvents(home, away, events) {
   return { home: { ...home, score: top.homeScore }, away: { ...away, score: top.awayScore } };
 }
 
+// Recent form (up to 5, most recent first) and head-to-head from the summary's lastFiveGames / headToHeadGames.
+function teamEvents(list, teamId) {
+  const t = (Array.isArray(list) ? list : []).find(x => String(x?.team?.id) === String(teamId));
+  return t && Array.isArray(t.events) ? t.events : [];
+}
+export function buildForm(summary, home, away) {
+  const res = id => teamEvents(summary?.lastFiveGames, id).map(e => e.gameResult).filter(r => r === "W" || r === "L" || r === "D").slice(0, 5);
+  return { home: res(home.id), away: res(away.id) };
+}
+export function buildH2H(summary, home, away) {
+  const evs = teamEvents(summary?.headToHeadGames, home.id);
+  if (!evs.length) return null;
+  const abbr = (e, id) => (String(id) === String(home.id) ? home.abbr : String(id) === String(away.id) ? away.abbr : e.opponent?.abbreviation || "");
+  const out = { played: evs.length, homeWins: 0, awayWins: 0, draws: 0, last: [] };
+  for (const e of evs) {
+    if (e.gameResult === "W") out.homeWins++; else if (e.gameResult === "L") out.awayWins++; else if (e.gameResult === "D") out.draws++;
+    if (out.last.length < 5) out.last.push({ date: e.gameDate || null, homeAbbr: abbr(e, e.homeTeamId), awayAbbr: abbr(e, e.awayTeamId), hs: num(e.homeTeamScore), as: num(e.awayTeamScore) });
+  }
+  return out;
+}
+
 export function buildMatch({ sbEvent, plays, summary, leagueId, leagueName, nowMs = Date.now() }) {
   const fx = normalizeScoreboardEvent(sbEvent, leagueId);
   const state = fx.status.state;
@@ -167,6 +188,7 @@ export function buildMatch({ sbEvent, plays, summary, leagueId, leagueName, nowM
     home: fromPlays ? fromPlays.home : fx.home, away: fromPlays ? fromPlays.away : fx.away, events,
     lineups: buildLineups(summary, events, fx.home, fx.away),
     stats: null,
+    form: buildForm(summary, fx.home, fx.away), h2h: buildH2H(summary, fx.home, fx.away),
     source: { name: "espn", fetchedAt: new Date(nowMs).toISOString(), partial,
       note: "ESPN public feed; events typically 20-40 s behind TV; clock estimated" + (fromPlays ? "; score from play feed" : "") },
   };

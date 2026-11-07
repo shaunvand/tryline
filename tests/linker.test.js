@@ -119,3 +119,14 @@ test("mergeMatch: a frozen WR clock never trails the events and is marked estima
   assert.equal(m.status.clockLabel, "50'");
   assert.equal(m.status.clockSource, "estimated");
 });
+
+test("mergeMatch swaps WR player stats with the teams", () => {
+  const t = (id, abbr) => ({ id, abbr, name: abbr, score: 0 });
+  const espn = { id: "1", home: t("e1", "ITA"), away: t("e2", "RSA"), status: { state: "post" }, events: [], lineups: { home: [], away: [] }, stats: null };
+  const wr = { id: "9", home: t("w1", "RSA"), away: t("w2", "ITA"), status: { state: "post" }, events: [], lineups: { home: [], away: [] },
+    stats: { home: { tackles: 1 }, away: { tackles: 2 }, players: { home: [{ name: "Kolisi" }], away: [{ name: "Capuozzo" }] } } };
+  const m = mergeMatch(espn, wr, true);
+  assert.equal(m.stats.home.tackles, 2);
+  assert.equal(m.stats.players.home[0].name, "Capuozzo");
+  assert.equal(m.stats.players.away[0].name, "Kolisi");
+});

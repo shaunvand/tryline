@@ -1,13 +1,15 @@
 // TryLine service worker. Code/data are network-first (a deploy shows at once); the cache is the offline fallback.
 // Bump VERSION when the SHELL list changes.
-const VERSION = 'tryline-v4';
+const VERSION = 'tryline-v5';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './styles/base.css', './styles/ui-a.css', './styles/ui-b.css',
-  './icons/icon.svg', './icons/icon-192.png', './icons/icon-512.png', './data/glossary.json',
+  './icons/icon.svg', './icons/icon-192.png', './icons/icon-512.png', './data/glossary.json', './data/broadcast.json', './data/coverage.json',
   './src/app.js', './src/store.js', './src/settings.js', './src/leagues.js', './src/linker.js', './src/teams.js',
   './src/adapters/index.js', './src/adapters/espn.js', './src/adapters/wr.js', './src/adapters/replay.js',
   './src/model/winprob.js', './src/model/pitch.js', './src/model/ratings.json',
   './src/ui/fixtures.js', './src/ui/header.js', './src/ui/timeline.js', './src/ui/lineups.js', './src/ui/pitch.js',
-  './src/ui/stats.js', './src/ui/glossary.js', './src/ui/alerts.js'];
+  './src/ui/stats.js', './src/ui/glossary.js', './src/ui/alerts.js',
+  './src/time.js', './src/follow.js', './src/model/sinbin.js', './src/model/explain.js', './src/model/rating.js',
+  './src/ui/sinbin.js', './src/ui/explain.js', './src/ui/follow.js', './src/ui/players.js', './src/ui/watch.js', './src/ui/coverage.js'];
 const LIVE_HOSTS = ['api.wr-rims-prod.pulselive.com', 'espn.com'];
 const u = (p) => new URL(p, self.registration.scope).href;
 

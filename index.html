@@ -31,6 +31,7 @@
   <section id="view-match" class="tl-view tl-hidden">
     <div id="tl-replaybar" class="tl-card tl-hidden" aria-label="Replay controls"></div>
     <div id="match-header" class="tl-card tl-skeleton">Loading match…</div>
+    <div id="match-explainer"></div>
     <nav id="match-tabs" class="tl-tabs" aria-label="Match sections">
       <button type="button" data-tab="timeline" class="active">Timeline</button>
       <button type="button" data-tab="pitch">Pitch</button>
@@ -51,14 +52,22 @@
     <h2>Settings</h2>
     <div class="tl-card">
       <label class="tl-row"><span>Alert me on tries, cards, FT</span><input id="opt-notify" type="checkbox"></label>
+      <label class="tl-row"><span>Only alert for teams I follow</span><input id="opt-followed-only" type="checkbox"></label>
       <label class="tl-row"><span>Replay speed</span>
         <select id="opt-speed" class="tl-input"><option value="1">1x</option><option value="5">5x</option><option value="20">20x</option></select></label>
     </div>
     <div class="tl-card">
+      <h3>Region</h3>
+      <label class="tl-row"><span>Time zone</span><select id="opt-tz" class="tl-input"></select></label>
+      <label class="tl-row"><span>Where-to-watch country</span><select id="opt-country" class="tl-input"></select></label>
+    </div>
+    <div class="tl-card">
       <h3>Data sources &amp; honesty</h3>
       <p>Scores and events come from ESPN and World Rugby public feeds. The clock is estimated for club matches. Pitch position is estimated from events, not tracked. Win probability is a model, not a promise.</p>
+      <p><a href="#/coverage">What each competition's feed covers</a></p>
     </div>
   </section>
+  <section id="view-coverage" class="tl-view tl-hidden"><div class="tl-card tl-skeleton">Loading coverage…</div></section>
 </main>
 <nav id="tl-nav" aria-label="Primary">
   <a href="#/" data-nav="fixtures" class="active"><span class="tl-ico">&#127945;</span>Fixtures</a>

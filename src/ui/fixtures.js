@@ -1,20 +1,17 @@
-// Fixture list renderer. Days are shown in Africa/Johannesburg (SAST).
+import { followedIn, isFollowed } from "../follow.js";
+import { fmtTime, fmtDay, tzLabel, getTimeZone } from "../time.js";
+// Fixture list renderer. Times and day groups use the time.js zone (device time unless the user picked one).
 const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ESC[c]);
-const TZ = "Africa/Johannesburg";
-const dayKey = ms => new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(ms);
-const timeFmt = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "2-digit", minute: "2-digit", hour12: false });
-const dateFmt = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, weekday: "short", day: "numeric", month: "short" });
+const dayKey = ms => new Intl.DateTimeFormat("en-CA", { ...(getTimeZone() ? { timeZone: getTimeZone() } : {}), year: "numeric", month: "2-digit", day: "2-digit" }).format(ms);
 
 const kickMs = f => f.kickoffMs ?? (f.kickoff ? Date.parse(f.kickoff) : NaN);
-export const formatSast = ms => Number.isNaN(ms) ? "TBC" : `${timeFmt.format(ms)} SAST`;
+/** Kick-off time with zone label, e.g. "16:10 SAST" (name kept for older callers). */
+export const formatSast = ms => Number.isNaN(ms) ? "TBC" : `${fmtTime(ms)} ${tzLabel(ms)}`;
+export const formatKick = formatSast;
 
 export function dayLabel(ms, nowMs) {
-  if (Number.isNaN(ms)) return "Date TBC";
-  const k = dayKey(ms);
-  if (k === dayKey(nowMs)) return "Today";
-  if (k === dayKey(nowMs + 864e5)) return "Tomorrow";
-  return dateFmt.format(ms);
+  return fmtDay(ms, nowMs);
 }
 
 function team(t) {
@@ -23,15 +20,16 @@ function team(t) {
   return `${logo}<span class="tl-fx-abbr">${esc(t.abbr || t.name || "TBC")}</span>`;
 }
 
-function row(f, href) {
+function row(f, href, followed) {
   const st = f.status?.state, ms = kickMs(f);
   const score = `<span class="tl-fx-score">${esc(f.home?.score ?? 0)} - ${esc(f.away?.score ?? 0)}</span>`;
   let right;
   if (st === "in") right = `<span class="tl-chip tl-chip-live">LIVE</span>${score}<span class="tl-fx-sub">${esc(f.status?.label || "")}</span>`;
   else if (st === "post") right = `${score}<span class="tl-fx-sub">FT</span>`;
   else right = `<span class="tl-fx-time">${esc(formatSast(ms))}</span>`;
+  const star = t => followed && followed.size && isFollowed(t, followed) ? `<span class="tl-fx-star" title="Followed" aria-label="Followed">\u2605</span>` : "";
   return `<a class="tl-fx-row${st === "in" ? " tl-live" : ""}" href="${esc(href)}" data-state="${esc(st || "pre")}">` +
-    `<span class="tl-fx-teams"><span class="tl-fx-team">${team(f.home)}</span><span class="tl-fx-vs">v</span><span class="tl-fx-team">${team(f.away)}</span></span>` +
+    `<span class="tl-fx-teams"><span class="tl-fx-team">${team(f.home)}${star(f.home)}</span><span class="tl-fx-vs">v</span><span class="tl-fx-team">${team(f.away)}${star(f.away)}</span></span>` +
     `<span class="tl-fx-league">${esc(f.leagueName || "")}</span><span class="tl-fx-right">${right}</span></a>`;
 }
 
@@ -49,7 +47,7 @@ function group(title, cls, body, emptyText) {
   return `<section class="tl-fx-group ${cls}"><h2 class="tl-fx-h">${esc(title)}</h2>${body || `<p class="tl-empty">${esc(emptyText)}</p>`}</section>`;
 }
 
-export function renderFixtures({ fixtures = [], selectedLeagueIds = [], nowMs = Date.now(), replays = [] } = {}) {
+export function renderFixtures({ fixtures = [], selectedLeagueIds = [], nowMs = Date.now(), replays = [], followed = new Set() } = {}) {
   const sel = new Set((selectedLeagueIds || []).map(String));
   const leagues = new Map();
   for (const f of fixtures) if (f.leagueId != null && !leagues.has(String(f.leagueId))) leagues.set(String(f.leagueId), f.leagueName || String(f.leagueId));
@@ -57,13 +55,22 @@ export function renderFixtures({ fixtures = [], selectedLeagueIds = [], nowMs = 
     [...leagues].map(([id, name]) => `<button type="button" class="tl-lchip${sel.has(id) ? " tl-on" : ""}" data-league="${esc(id)}" aria-pressed="${sel.has(id)}">${esc(name)}</button>`).join("") + `</div>`;
   const shown = fixtures.filter(f => !sel.size || sel.has(String(f.leagueId)));
   const href = f => f.href || `#/match/${encodeURIComponent(f.leagueId)}/${encodeURIComponent(f.id)}`;
-  const rows = list => list.map(f => row(f, href(f))).join("");
+  const rows = list => list.map(f => row(f, href(f), followed)).join("");
   const dayBlocks = groups => groups.map(g => `<h3 class="tl-fx-day">${esc(g.label)}</h3>${rows(g.items)}`).join("");
   const live = shown.filter(f => f.status?.state === "in");
   const pre = shown.filter(f => !["in", "post"].includes(f.status?.state));
   const post = shown.filter(f => f.status?.state === "post");
   const rep = (replays || []).map(r => `<a class="tl-fx-row tl-replay" href="#/replay/${encodeURIComponent(r.slug)}"><span class="tl-fx-teams">${esc(r.title)}</span><span class="tl-fx-right"><span class="tl-chip">REPLAY</span></span></a>`).join("");
-  return `<div class="tl-fixtures">${chips}` +
+  // "Your teams": followed fixtures across the whole range (ignores the league filter), live first.
+  let mine = "";
+  if (followed && followed.size) {
+    const m = fixtures.filter(f => followedIn(f, followed));
+    const mLive = m.filter(f => f.status?.state === "in");
+    const mPre = m.filter(f => !["in", "post"].includes(f.status?.state));
+    const mPost = m.filter(f => f.status?.state === "post");
+    mine = group("Your teams", "tl-fx-mine", rows(mLive) + dayBlocks(byDay(mPre, nowMs, true)) + dayBlocks(byDay(mPost, nowMs, false)), "No fixtures for your teams.");
+  }
+  return `<div class="tl-fixtures">${chips}` + mine +
     group("Live now", "tl-fx-live", rows(live), "No live matches right now.") +
     group("Upcoming", "tl-fx-up", dayBlocks(byDay(pre, nowMs, true)), "No upcoming matches.") +
     group("Finished", "tl-fx-done", dayBlocks(byDay(post, nowMs, false)), "No finished matches.") +
