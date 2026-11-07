@@ -1,0 +1,821 @@
+{
+ "builtFrom": 4221,
+ "asOf": "2026-11-06T20:10Z",
+ "global": {
+  "meanTotal": 52.9,
+  "hfa": 4.0,
+  "sdMargin": 16.1,
+  "k": 0.12,
+  "cap": 35
+ },
+ "leagues": {
+  "268565": {
+   "meanTotal": 49.4,
+   "sdTotal": 10.6,
+   "hfa": -16.8,
+   "sdMargin": 16.0,
+   "n": 10
+  },
+  "164205": {
+   "meanTotal": 54.4,
+   "sdTotal": 19.2,
+   "hfa": 24.2,
+   "sdMargin": 14.1,
+   "n": 48
+  },
+  "289234": {
+   "meanTotal": 54.2,
+   "sdTotal": 17.5,
+   "hfa": 4.6,
+   "sdMargin": 20.4,
+   "n": 454
+  },
+  "270559": {
+   "meanTotal": 50.9,
+   "sdTotal": 15.5,
+   "hfa": 9.6,
+   "sdMargin": 14.6,
+   "n": 898
+  },
+  "17567": {
+   "meanTotal": 61.2,
+   "sdTotal": 11.2,
+   "hfa": 3.5,
+   "sdMargin": 14.6,
+   "n": 19
+  },
+  "267979": {
+   "meanTotal": 54.2,
+   "sdTotal": 16.8,
+   "hfa": 6.1,
+   "sdMargin": 15.3,
+   "n": 511
+  },
+  "270557": {
+   "meanTotal": 49.2,
+   "sdTotal": 15.2,
+   "hfa": 7.2,
+   "sdMargin": 13.8,
+   "n": 743
+  },
+  "272073": {
+   "meanTotal": 51.5,
+   "sdTotal": 15.4,
+   "hfa": 7.1,
+   "sdMargin": 15.5,
+   "n": 245
+  },
+  "242041": {
+   "meanTotal": 55.9,
+   "sdTotal": 15.1,
+   "hfa": 6.0,
+   "sdMargin": 14.6,
+   "n": 439
+  },
+  "270563": {
+   "meanTotal": 57.0,
+   "sdTotal": 15.7,
+   "hfa": 4.1,
+   "sdMargin": 16.2,
+   "n": 385
+  },
+  "244293": {
+   "meanTotal": 54.2,
+   "sdTotal": 13.4,
+   "hfa": 3.3,
+   "sdMargin": 16.9,
+   "n": 42
+  },
+  "270555": {
+   "meanTotal": 57.1,
+   "sdTotal": 16.2,
+   "hfa": 1.2,
+   "sdMargin": 16.7,
+   "n": 44
+  },
+  "180659": {
+   "meanTotal": 49.3,
+   "sdTotal": 14.9,
+   "hfa": 1.9,
+   "sdMargin": 14.0,
+   "n": 75
+  },
+  "271937": {
+   "meanTotal": 54.9,
+   "sdTotal": 16.7,
+   "hfa": 9.8,
+   "sdMargin": 15.8,
+   "n": 308
+  }
+ },
+ "teams": {
+  "25908": {
+   "name": "Sale Sharks",
+   "rating": -2.0
+  },
+  "25905": {
+   "name": "Wasps",
+   "rating": -2.32
+  },
+  "116227": {
+   "name": "Exeter Chiefs",
+   "rating": 3.07
+  },
+  "25899": {
+   "name": "Bristol Rugby",
+   "rating": 1.76
+  },
+  "25966": {
+   "name": "Scarlets",
+   "rating": -4.43
+  },
+  "25968": {
+   "name": "Ospreys",
+   "rating": -2.93
+  },
+  "25923": {
+   "name": "Connacht",
+   "rating": 1.94
+  },
+  "25925": {
+   "name": "Munster",
+   "rating": 2.52
+  },
+  "25921": {
+   "name": "Stade Francais Paris",
+   "rating": 5.02
+  },
+  "25920": {
+   "name": "Perpignan",
+   "rating": -4.36
+  },
+  "25917": {
+   "name": "Clermont Auvergne",
+   "rating": 0.14
+  },
+  "25922": {
+   "name": "Stade Toulousain",
+   "rating": 10.83
+  },
+  "270567": {
+   "name": "Pau",
+   "rating": 6.88
+  },
+  "25915": {
+   "name": "Brive",
+   "rating": -10.85
+  },
+  "25900": {
+   "name": "Gloucester Rugby",
+   "rating": 2.51
+  },
+  "25901": {
+   "name": "Harlequins",
+   "rating": 0.99
+  },
+  "25903": {
+   "name": "Leicester Tigers",
+   "rating": 6.44
+  },
+  "25906": {
+   "name": "Newcastle Falcons",
+   "rating": -14.18
+  },
+  "25907": {
+   "name": "Northampton Saints",
+   "rating": 7.81
+  },
+  "25909": {
+   "name": "Saracens",
+   "rating": 4.54
+  },
+  "143737": {
+   "name": "Bordeaux Begles",
+   "rating": 9.44
+  },
+  "25913": {
+   "name": "Biarritz Olympique",
+   "rating": -12.08
+  },
+  "25916": {
+   "name": "Castres Olympique",
+   "rating": -1.29
+  },
+  "119318": {
+   "name": "La Rochelle",
+   "rating": 4.52
+  },
+  "143736": {
+   "name": "Lyon",
+   "rating": 0.43
+  },
+  "99855": {
+   "name": "Racing 92",
+   "rating": 1.86
+  },
+  "25951": {
+   "name": "Edinburgh",
+   "rating": -2.44
+  },
+  "25965": {
+   "name": "Cardiff Blues",
+   "rating": -1.7
+  },
+  "25952": {
+   "name": "Glasgow Warriors",
+   "rating": 7.46
+  },
+  "25926": {
+   "name": "Ulster",
+   "rating": 1.49
+  },
+  "25898": {
+   "name": "Bath Rugby",
+   "rating": 6.45
+  },
+  "25910": {
+   "name": "Worcester Warriors",
+   "rating": -7.39
+  },
+  "113636": {
+   "name": "Pumas",
+   "rating": 3.05
+  },
+  "25976": {
+   "name": "Blue Bulls",
+   "rating": 1.64
+  },
+  "25956": {
+   "name": "Free State Cheetahs",
+   "rating": 4.7
+  },
+  "25980": {
+   "name": "Griquas",
+   "rating": 2.16
+  },
+  "25964": {
+   "name": "Western Province",
+   "rating": -3.42
+  },
+  "25969": {
+   "name": "Golden Lions",
+   "rating": -6.15
+  },
+  "25927": {
+   "name": "Benetton Treviso",
+   "rating": -3.31
+  },
+  "25967": {
+   "name": "Dragons",
+   "rating": -5.84
+  },
+  "25904": {
+   "name": "London Irish",
+   "rating": 3.88
+  },
+  "25986": {
+   "name": "Toulon",
+   "rating": 2.92
+  },
+  "25924": {
+   "name": "Leinster",
+   "rating": 14.43
+  },
+  "25918": {
+   "name": "Montpellier Herault",
+   "rating": 12.44
+  },
+  "169": {
+   "name": "Natal Sharks",
+   "rating": -1.98
+  },
+  "25958": {
+   "name": "Lions",
+   "rating": -0.73
+  },
+  "25961": {
+   "name": "Sharks",
+   "rating": 5.72
+  },
+  "25962": {
+   "name": "Stormers",
+   "rating": 9.58
+  },
+  "25953": {
+   "name": "Bulls",
+   "rating": 12.39
+  },
+  "167124": {
+   "name": "Zebre",
+   "rating": -13.64
+  },
+  "3": {
+   "name": "Ireland",
+   "rating": 12.65
+  },
+  "4": {
+   "name": "Wales",
+   "rating": -6.62
+  },
+  "2": {
+   "name": "Scotland",
+   "rating": 10.0
+  },
+  "1": {
+   "name": "England",
+   "rating": 11.8
+  },
+  "9": {
+   "name": "France",
+   "rating": 14.26
+  },
+  "20": {
+   "name": "Italy",
+   "rating": -3.92
+  },
+  "227": {
+   "name": "New South Wales Waratahs",
+   "rating": -5.7
+  },
+  "289338": {
+   "name": "Fijian Drua",
+   "rating": -9.12
+  },
+  "25934": {
+   "name": "Chiefs",
+   "rating": 13.11
+  },
+  "25938": {
+   "name": "Highlanders",
+   "rating": -4.79
+  },
+  "25936": {
+   "name": "Crusaders",
+   "rating": 9.14
+  },
+  "25939": {
+   "name": "Hurricanes",
+   "rating": 16.9
+  },
+  "182": {
+   "name": "Queensland Reds",
+   "rating": -1.75
+  },
+  "25894": {
+   "name": "Melbourne Rebels",
+   "rating": -8.4
+  },
+  "25889": {
+   "name": "Brumbies",
+   "rating": -0.39
+  },
+  "25893": {
+   "name": "Western Force",
+   "rating": -5.34
+  },
+  "25932": {
+   "name": "Blues",
+   "rating": 3.49
+  },
+  "289319": {
+   "name": "Moana Pasifika",
+   "rating": -12.54
+  },
+  "23": {
+   "name": "Japan",
+   "rating": -7.82
+  },
+  "29": {
+   "name": "Uruguay",
+   "rating": -0.71
+  },
+  "27": {
+   "name": "Portugal",
+   "rating": -1.57
+  },
+  "12": {
+   "name": "Romania",
+   "rating": -11.05
+  },
+  "8": {
+   "name": "New Zealand",
+   "rating": 18.35
+  },
+  "6": {
+   "name": "Australia",
+   "rating": 3.74
+  },
+  "5": {
+   "name": "South Africa",
+   "rating": 18.75
+  },
+  "10": {
+   "name": "Argentina",
+   "rating": 3.58
+  },
+  "289243": {
+   "name": "Chile",
+   "rating": 0.53
+  },
+  "11": {
+   "name": "United States of America",
+   "rating": -1.58
+  },
+  "81": {
+   "name": "Georgia",
+   "rating": -2.85
+  },
+  "16": {
+   "name": "Tonga",
+   "rating": -5.16
+  },
+  "289268": {
+   "name": "Hong Kong",
+   "rating": 3.55
+  },
+  "25940": {
+   "name": "Manawatu",
+   "rating": -9.36
+  },
+  "25933": {
+   "name": "Canterbury",
+   "rating": 10.32
+  },
+  "25935": {
+   "name": "Counties Manukau",
+   "rating": -3.3
+  },
+  "25943": {
+   "name": "Otago",
+   "rating": 7.01
+  },
+  "25947": {
+   "name": "Waikato",
+   "rating": -1.01
+  },
+  "25937": {
+   "name": "Hawke's Bay",
+   "rating": 1.43
+  },
+  "25930": {
+   "name": "Auckland",
+   "rating": -3.68
+  },
+  "25941": {
+   "name": "North Harbour",
+   "rating": 0.53
+  },
+  "25945": {
+   "name": "Taranaki",
+   "rating": 8.86
+  },
+  "25942": {
+   "name": "Northland",
+   "rating": 4.02
+  },
+  "25948": {
+   "name": "Wellington",
+   "rating": -9.27
+  },
+  "25931": {
+   "name": "Bay of Plenty",
+   "rating": 2.29
+  },
+  "25946": {
+   "name": "Tasman",
+   "rating": 2.11
+  },
+  "25944": {
+   "name": "Southland",
+   "rating": -9.96
+  },
+  "25912": {
+   "name": "Bayonne",
+   "rating": -1.56
+  },
+  "289429": {
+   "name": "Denmark",
+   "rating": 9.35
+  },
+  "289430": {
+   "name": "Andorra",
+   "rating": 0.28
+  },
+  "289431": {
+   "name": "Serbia",
+   "rating": 0.68
+  },
+  "289432": {
+   "name": "Montenegro",
+   "rating": -1.95
+  },
+  "289433": {
+   "name": "Hungary",
+   "rating": -1.08
+  },
+  "289434": {
+   "name": "Czechia",
+   "rating": 8.01
+  },
+  "289435": {
+   "name": "Finland",
+   "rating": 5.33
+  },
+  "289436": {
+   "name": "Malta",
+   "rating": 3.16
+  },
+  "289437": {
+   "name": "Bulgaria",
+   "rating": -0.84
+  },
+  "289438": {
+   "name": "Norway",
+   "rating": -9.07
+  },
+  "289439": {
+   "name": "Croatia",
+   "rating": -3.72
+  },
+  "289440": {
+   "name": "Ukraine",
+   "rating": -2.25
+  },
+  "289427": {
+   "name": "Slovenia",
+   "rating": -2.04
+  },
+  "289425": {
+   "name": "Bosnia-Herzegovina",
+   "rating": -5.25
+  },
+  "289441": {
+   "name": "Sweden",
+   "rating": 5.08
+  },
+  "289442": {
+   "name": "Lithuania",
+   "rating": -6.0
+  },
+  "14": {
+   "name": "Fiji",
+   "rating": -2.45
+  },
+  "15": {
+   "name": "Samoa",
+   "rating": -1.24
+  },
+  "289443": {
+   "name": "Switzerland",
+   "rating": 7.16
+  },
+  "289444": {
+   "name": "Israel",
+   "rating": 0.88
+  },
+  "289211": {
+   "name": "Spain",
+   "rating": -2.92
+  },
+  "289210": {
+   "name": "Kenya",
+   "rating": -0.79
+  },
+  "289445": {
+   "name": "Moldova",
+   "rating": 3.7
+  },
+  "289324": {
+   "name": "Netherlands",
+   "rating": -1.03
+  },
+  "25": {
+   "name": "Canada",
+   "rating": -9.18
+  },
+  "82": {
+   "name": "Namibia",
+   "rating": -5.95
+  },
+  "25955": {
+   "name": "Cheetahs",
+   "rating": -7.94
+  },
+  "289352": {
+   "name": "Cayman Islands",
+   "rating": 2.38
+  },
+  "289353": {
+   "name": "Mexico",
+   "rating": 3.3
+  },
+  "289364": {
+   "name": "Botswana",
+   "rating": 1.86
+  },
+  "289365": {
+   "name": "Eswatini",
+   "rating": -1.86
+  },
+  "289448": {
+   "name": "Latvia",
+   "rating": 3.02
+  },
+  "289454": {
+   "name": "Korea Republic",
+   "rating": -0.28
+  },
+  "289455": {
+   "name": "Malaysia",
+   "rating": -8.29
+  },
+  "289452": {
+   "name": "Trinidad and Tobago",
+   "rating": 0.04
+  },
+  "289453": {
+   "name": "Barbados",
+   "rating": 5.26
+  },
+  "190153": {
+   "name": "Oyonnax",
+   "rating": -8.88
+  },
+  "289482": {
+   "name": "Austria",
+   "rating": 3.58
+  },
+  "289426": {
+   "name": "Turkey",
+   "rating": -1.42
+  },
+  "289483": {
+   "name": "Luxembourg",
+   "rating": -2.05
+  },
+  "289487": {
+   "name": "Uganda",
+   "rating": -1.85
+  },
+  "289488": {
+   "name": "Zambia",
+   "rating": -2.79
+  },
+  "289428": {
+   "name": "Cyprus",
+   "rating": -2.32
+  },
+  "33": {
+   "name": "Brazil",
+   "rating": -4.68
+  },
+  "7": {
+   "name": "Germany",
+   "rating": -1.82
+  },
+  "289489": {
+   "name": "Tunisia",
+   "rating": 1.38
+  },
+  "289460": {
+   "name": "Black Lion",
+   "rating": -10.31
+  },
+  "289493": {
+   "name": "Algeria",
+   "rating": 0.25
+  },
+  "289494": {
+   "name": "Senegal",
+   "rating": -0.65
+  },
+  "289519": {
+   "name": "Guyana",
+   "rating": -4.76
+  },
+  "289447": {
+   "name": "Qatar",
+   "rating": -0.15
+  },
+  "289463": {
+   "name": "Cambridge",
+   "rating": -1.89
+  },
+  "289516": {
+   "name": "Sri Lanka",
+   "rating": 5.81
+  },
+  "289517": {
+   "name": "India",
+   "rating": -2.07
+  },
+  "289520": {
+   "name": "Bermuda",
+   "rating": -0.43
+  },
+  "289525": {
+   "name": "Singapore",
+   "rating": -1.26
+  },
+  "289522": {
+   "name": "St. Vincent and the Grenadines",
+   "rating": -1.87
+  },
+  "289521": {
+   "name": "Jamaica",
+   "rating": 1.56
+  },
+  "289518": {
+   "name": "United Arab Emirates",
+   "rating": -2.71
+  },
+  "289523": {
+   "name": "Bahamas",
+   "rating": -3.87
+  },
+  "289524": {
+   "name": "Saint Lucia",
+   "rating": -2.24
+  },
+  "289527": {
+   "name": "Thailand",
+   "rating": -0.53
+  },
+  "289528": {
+   "name": "Chinese Taipei",
+   "rating": -0.26
+  },
+  "289267": {
+   "name": "Belgium",
+   "rating": 1.2
+  },
+  "289514": {
+   "name": "Paraguay",
+   "rating": -6.99
+  },
+  "289530": {
+   "name": "Burkina Faso",
+   "rating": -2.88
+  },
+  "289358": {
+   "name": "Cote d'Ivoire",
+   "rating": -1.24
+  },
+  "289356": {
+   "name": "Zimbabwe",
+   "rating": 5.01
+  },
+  "289539": {
+   "name": "Costa Rica",
+   "rating": -3.81
+  },
+  "289540": {
+   "name": "Peru",
+   "rating": 0.44
+  },
+  "289337": {
+   "name": "Vannes",
+   "rating": -7.51
+  },
+  "289542": {
+   "name": "Venezuela",
+   "rating": -1.32
+  },
+  "289541": {
+   "name": "Colombia",
+   "rating": 2.77
+  },
+  "289549": {
+   "name": "Kosovo",
+   "rating": -6.54
+  },
+  "289550": {
+   "name": "Estonia",
+   "rating": -8.21
+  },
+  "289551": {
+   "name": "Slovakia",
+   "rating": -5.99
+  },
+  "289361": {
+   "name": "Poland",
+   "rating": 6.24
+  },
+  "32": {
+   "name": "British and Irish Lions",
+   "rating": 6.69
+  },
+  "289469": {
+   "name": "AUNZ XV",
+   "rating": -2.03
+  },
+  "289754": {
+   "name": "First Nations & Pasifika XV",
+   "rating": -0.09
+  },
+  "289766": {
+   "name": "US Montauban",
+   "rating": -21.78
+  }
+ }
+}

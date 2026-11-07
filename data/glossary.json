@@ -1,0 +1,424 @@
+{
+ "terms": [
+  {
+   "term": "Ruck",
+   "short": "Contest for the ball on the ground after a tackle, formed when at least one player from each team is on their feet and in contact over the ball.",
+   "law": "Law 15",
+   "refSignal": "No formal signal for formation; the referee calls 'ruck' and points the way the ball is going once it is won.",
+   "whyItMatters": "Most penalties happen here. Players must stay on their feet and join from behind the back foot."
+  },
+  {
+   "term": "Maul",
+   "short": "A ball carrier held by one or more opponents, with at least one teammate bound on, all on their feet and moving toward a goal line.",
+   "law": "Law 16",
+   "refSignal": "Referee mimes a pulling motion with both hands, then points to the side that has the ball.",
+   "whyItMatters": "Rolling mauls are a major try-scoring route; collapsing one is a penalty."
+  },
+  {
+   "term": "Knock-on",
+   "short": "The ball goes forward off a hand or arm and hits the ground or another player.",
+   "law": "Law 11",
+   "refSignal": "Referee moves one hand forward across the other arm in a forward-knocking motion.",
+   "whyItMatters": "Scrum to the other team, which changes possession."
+  },
+  {
+   "term": "Forward pass",
+   "short": "A pass thrown forward toward the opposition's dead-ball line.",
+   "law": "Law 11",
+   "refSignal": "Referee makes a forward throwing motion with both hands.",
+   "whyItMatters": "Scrum to the opposition. Judged on the direction of the pass, not the passer's body."
+  },
+  {
+   "term": "Offside at the ruck",
+   "short": "A player in front of the back foot of the hindmost player at a ruck takes part in play.",
+   "law": "Law 15",
+   "refSignal": "Referee points to the offending team, then signals a penalty.",
+   "whyItMatters": "Penalty, often in a kickable position."
+  },
+  {
+   "term": "Not releasing",
+   "short": "A tackled player fails to release the ball, or a tackler fails to release the player, immediately.",
+   "law": "Law 14",
+   "refSignal": "Referee mimes holding the ball to the chest, then gives the penalty arm.",
+   "whyItMatters": "Penalty against the player holding on; one of the most common ruck penalties."
+  },
+  {
+   "term": "Hands in the ruck",
+   "short": "A player uses their hands to play the ball at a ruck when they are not entitled to.",
+   "law": "Law 15",
+   "refSignal": "Referee mimes reaching into the ruck with a hand, then gives the penalty arm.",
+   "whyItMatters": "Penalty. Once a ruck has formed, players may not use their hands on the ball."
+  },
+  {
+   "term": "Sealing off",
+   "short": "A player prevents opponents from competing for the ball by lying across the tackled player or the ball.",
+   "law": "Law 15",
+   "refSignal": "Referee mimes blocking access to the ball, then gives the penalty arm.",
+   "whyItMatters": "Penalty. The ball must be available to both teams."
+  },
+  {
+   "term": "Truck-and-trailer",
+   "short": "A player obstructs a defender by running in front of or alongside the ball carrier, or a player in a maul, without being bound.",
+   "law": "Law 16",
+   "refSignal": "Referee signals obstruction (arm across the body), then the penalty arm.",
+   "whyItMatters": "Penalty against the team that blocks the defenders."
+  },
+  {
+   "term": "50:22",
+   "short": "A kick from inside the kicker's own half that bounces and then goes into touch inside the opposition 22; the kicking team throws in at the lineout.",
+   "law": "Law 18",
+   "refSignal": "Referee signals the lineout throw to the kicking team.",
+   "whyItMatters": "Gives the kicking team territory and the throw-in."
+  },
+  {
+   "term": "Goal-line dropout",
+   "short": "Restart where a kick is held up or made dead in the in-goal by the defending side; the defenders restart with a drop kick from the 22.",
+   "law": "Law 20",
+   "refSignal": "Referee points to the 22 and signals a dropout.",
+   "whyItMatters": "Returns the ball to the defenders at the 22."
+  },
+  {
+   "term": "TMO",
+   "short": "Television Match Official who reviews video to help the referee with tries, foul play and certain other incidents.",
+   "law": "Law 6 / TMO protocol",
+   "refSignal": "Referee draws a TV screen shape in the air with both hands.",
+   "whyItMatters": "Final try and foul-play decisions can depend on the review."
+  },
+  {
+   "term": "Bunker review",
+   "short": "A review of potential red-card incidents by a separate official while play continues, used in competitions that apply the 20-minute red card.",
+   "law": "Law 9 / competition rules",
+   "refSignal": "Referee shows a card or signals the review, depending on the competition.",
+   "whyItMatters": "Can upgrade or downgrade a card without the match being held up for a long time."
+  },
+  {
+   "term": "20-minute red card",
+   "short": "A red card where the offender is sent off but the team may replace them after 20 minutes. Used in some competitions.",
+   "law": "Competition rules (World Rugby trial)",
+   "refSignal": "Referee shows the red card.",
+   "whyItMatters": "The team is a player short for 20 minutes, then back to 15."
+  },
+  {
+   "term": "Advantage",
+   "short": "The referee lets play continue after an offence if the non-offending team can gain a clear benefit.",
+   "law": "Law 7",
+   "refSignal": "Referee extends one arm toward the non-offending team and calls 'advantage'.",
+   "whyItMatters": "If there is no clear gain, play comes back for the original penalty or scrum."
+  },
+  {
+   "term": "Mark",
+   "short": "A catch directly from an opponent's kick, made on or inside the catcher's own 22, with a call of 'mark'.",
+   "law": "Law 18",
+   "refSignal": "Referee signals a free kick to the catcher.",
+   "whyItMatters": "Gives the catcher a free kick."
+  },
+  {
+   "term": "Scrum collapse",
+   "short": "A front row deliberately or repeatedly pulls the scrum down.",
+   "law": "Law 19",
+   "refSignal": "Referee mimes the scrum going down, then gives a penalty or free kick.",
+   "whyItMatters": "Penalty against the side at fault; repeated collapses can bring a card."
+  },
+  {
+   "term": "Scrum penalties",
+   "short": "Offences at the scrum such as early engagement, boring in, standing up or pulling an opponent down.",
+   "law": "Law 19",
+   "refSignal": "Referee signals the offence, then the penalty arm toward the non-offending side.",
+   "whyItMatters": "Penalty or free kick, which can mean a shot at goal."
+  },
+  {
+   "term": "Lineout not straight",
+   "short": "The thrower fails to throw the ball straight down the middle of the lineout.",
+   "law": "Law 19",
+   "refSignal": "Referee mimes the throw with a crooked arm.",
+   "whyItMatters": "Scrum to the opposition (or a free kick in some cases)."
+  },
+  {
+   "term": "Head contact framework",
+   "short": "World Rugby's tackle framework that sets the sanction for head contact, based on the degree of danger and mitigation.",
+   "law": "Law 9 / Tackle framework",
+   "refSignal": "Referee mimes contact to the head, then shows a yellow or red card where needed.",
+   "whyItMatters": "It explains why a high tackle may be a penalty, yellow card or red card."
+  },
+  {
+   "term": "Deliberate knock-on",
+   "short": "A player intentionally knocks the ball forward to stop an opponent gaining an advantage.",
+   "law": "Law 11",
+   "refSignal": "Referee mimes the knock-on, then gives the penalty arm.",
+   "whyItMatters": "Penalty, and often a yellow card if it stops a probable try."
+  },
+  {
+   "term": "High tackle",
+   "short": "A tackle made at or above the line of the shoulders.",
+   "law": "Law 9",
+   "refSignal": "Referee touches the chest, shoulder or neck area, then gives the penalty arm.",
+   "whyItMatters": "Penalty; yellow or red card depending on the severity."
+  },
+  {
+   "term": "Jackal",
+   "short": "A player who stays on their feet over the ball after a tackle and tries to win a turnover.",
+   "law": "Law 15",
+   "refSignal": "No signal; the referee watches that the player supports their own weight.",
+   "whyItMatters": "A major turnover tool; if the jackal goes off their feet or enters from the side, it is a penalty."
+  },
+  {
+   "term": "Crocodile roll",
+   "short": "A clean-out where a player grabs a leg or hip of an opponent over the ball and rolls them away.",
+   "law": "Law 9 / Law 15",
+   "refSignal": "Referee mimes the rolling motion, then gives the penalty arm.",
+   "whyItMatters": "Penalised as dangerous play and can lead to a card."
+  },
+  {
+   "term": "HIA",
+   "short": "Head Injury Assessment: an off-field concussion check, with a temporary replacement allowed during it.",
+   "law": "HIA protocol / Law 3",
+   "refSignal": "Referee stops play; the HIA is signalled by the medical team.",
+   "whyItMatters": "A failed HIA means the player does not return."
+  },
+  {
+   "term": "Yellow card",
+   "short": "A 10-minute temporary suspension.",
+   "law": "Law 9",
+   "refSignal": "Referee holds a yellow card above their head.",
+   "whyItMatters": "The team plays a player short for 10 minutes."
+  },
+  {
+   "term": "Red card",
+   "short": "Permanent send-off for serious foul play.",
+   "law": "Law 9",
+   "refSignal": "Referee holds a red card above their head.",
+   "whyItMatters": "The player cannot return; the team is down a player (subject to competition rules)."
+  },
+  {
+   "term": "Penalty try",
+   "short": "Awarded when the referee decides a try would probably have been scored but for foul play.",
+   "law": "Law 8",
+   "refSignal": "Referee runs under the posts with both arms raised.",
+   "whyItMatters": "7 points with no conversion; the offender is often carded."
+  },
+  {
+   "term": "Conversion",
+   "short": "A kick at goal after a try, taken in line with where the ball was grounded.",
+   "law": "Law 8",
+   "refSignal": "Referee signals the kick with a raised arm.",
+   "whyItMatters": "Worth 2 points."
+  },
+  {
+   "term": "Drop goal",
+   "short": "A kick at goal in open play where the ball bounces off the ground just before it is kicked.",
+   "law": "Law 8",
+   "refSignal": "Referee raises both arms.",
+   "whyItMatters": "Worth 3 points."
+  },
+  {
+   "term": "Penalty goal",
+   "short": "A kick at goal from the place of the penalty.",
+   "law": "Law 8",
+   "refSignal": "Referee raises both arms.",
+   "whyItMatters": "Worth 3 points."
+  },
+  {
+   "term": "Try",
+   "short": "The ball is grounded in the opponent's in-goal area by an attacker.",
+   "law": "Law 8",
+   "refSignal": "Referee raises one arm and points to the posts or to the grounding.",
+   "whyItMatters": "Worth 5 points plus a conversion attempt."
+  },
+  {
+   "term": "Scrum",
+   "short": "Eight forwards from each team bind and push for the ball after a minor offence or stoppage.",
+   "law": "Law 19",
+   "refSignal": "Referee points to the team that puts the ball in.",
+   "whyItMatters": "Restart after knock-ons and forward passes."
+  },
+  {
+   "term": "Lineout",
+   "short": "Restart after the ball goes into touch, with jumpers lifted by teammates.",
+   "law": "Law 19",
+   "refSignal": "Referee points toward the team that throws in.",
+   "whyItMatters": "A set-piece for attack and a source of mauls."
+  },
+  {
+   "term": "Free kick",
+   "short": "A restart for a minor offence; the opposing team must retreat 10 m.",
+   "law": "Law 20",
+   "refSignal": "Referee bends one arm at the elbow and raises it.",
+   "whyItMatters": "No shot at goal; the team may kick, run or tap."
+  },
+  {
+   "term": "Tap penalty",
+   "short": "A quick restart after a penalty without waiting for a kick.",
+   "law": "Law 20",
+   "refSignal": "Referee points toward the team and then lets play start.",
+   "whyItMatters": "Allows a fast attack."
+  },
+  {
+   "term": "Kick to touch",
+   "short": "A penalty or free kick kicked out to touch to gain territory.",
+   "law": "Law 18",
+   "refSignal": "Referee points toward the touchline and signals a lineout.",
+   "whyItMatters": "Gains territory with the throw-in."
+  },
+  {
+   "term": "Offside in open play",
+   "short": "A player in front of a teammate who last played the ball takes part in play.",
+   "law": "Law 11",
+   "refSignal": "Referee points to the offending team, then gives the penalty arm.",
+   "whyItMatters": "Penalty to the other team."
+  },
+  {
+   "term": "Obstruction",
+   "short": "A player gets in the way of an opponent who is not the ball carrier.",
+   "law": "Law 9",
+   "refSignal": "Referee crosses the arms in front of the chest, then gives the penalty arm.",
+   "whyItMatters": "Penalty."
+  },
+  {
+   "term": "Dangerous play",
+   "short": "Play that puts another player at risk, such as lifting a player past the horizontal.",
+   "law": "Law 9",
+   "refSignal": "Referee mimes the offence, then shows a card where needed.",
+   "whyItMatters": "Penalty and possible yellow or red card."
+  },
+  {
+   "term": "Tackling in the air",
+   "short": "Challenging or tackling a player who is in the air.",
+   "law": "Law 9",
+   "refSignal": "Referee mimes the contact in the air and gives the penalty arm.",
+   "whyItMatters": "Penalty; often a card because of the landing."
+  },
+  {
+   "term": "Sin bin",
+   "short": "Informal name for the 10-minute yellow card suspension.",
+   "law": "Law 9",
+   "refSignal": "Referee shows a yellow card.",
+   "whyItMatters": "The player waits off the field for 10 minutes."
+  },
+  {
+   "term": "Offside at the lineout",
+   "short": "A player moves early or stands in the wrong place at a lineout.",
+   "law": "Law 19",
+   "refSignal": "Referee points to the offside line and gives the penalty arm.",
+   "whyItMatters": "Penalty or free kick."
+  },
+  {
+   "term": "Maul collapse",
+   "short": "Deliberately pulling a maul down.",
+   "law": "Law 16",
+   "refSignal": "Referee mimes the maul going down, then gives the penalty arm.",
+   "whyItMatters": "Penalty; possible yellow card."
+  },
+  {
+   "term": "Cynical foul",
+   "short": "A deliberate foul to stop an attack, such as slowing the ball or pulling down a maul.",
+   "law": "Law 9",
+   "refSignal": "Referee signals the offence, then shows a yellow card.",
+   "whyItMatters": "Yellow card (or red for the most serious)."
+  },
+  {
+   "term": "Accidental offside",
+   "short": "A player accidentally ends offside and gains no advantage.",
+   "law": "Law 11",
+   "refSignal": "Referee signals a scrum to the other team.",
+   "whyItMatters": "Scrum, no penalty."
+  },
+  {
+   "term": "Dead ball",
+   "short": "The ball goes beyond the dead-ball line or touch-in-goal.",
+   "law": "Law 8",
+   "refSignal": "Referee signals a 22 dropout or a scrum, depending on the incident.",
+   "whyItMatters": "Play restarts with a 22 dropout or a scrum."
+  },
+  {
+   "term": "Forward pass offside",
+   "short": "A pass that goes forward leaves receivers offside until play restarts.",
+   "law": "Law 11",
+   "refSignal": "Referee signals the forward pass.",
+   "whyItMatters": "Scrum to the other team."
+  },
+  {
+   "term": "Penalty advantage",
+   "short": "Referee plays advantage but comes back if there is no gain.",
+   "law": "Law 7",
+   "refSignal": "Referee holds out one arm toward the non-offending team.",
+   "whyItMatters": "Play on or penalty."
+  }
+ ],
+ "decisions": [
+  {
+   "decision": "Knock-on",
+   "signal": "One hand moves forward across the other arm",
+   "outcome": "Scrum to the other team"
+  },
+  {
+   "decision": "Forward pass",
+   "signal": "Both hands thrust forward as if throwing",
+   "outcome": "Scrum to the other team"
+  },
+  {
+   "decision": "Penalty",
+   "signal": "One arm raised and angled toward the non-offending team",
+   "outcome": "Kick at goal, touch or tap"
+  },
+  {
+   "decision": "Free kick",
+   "signal": "One arm bent at the elbow and raised",
+   "outcome": "Tap or kick; no direct goal attempt"
+  },
+  {
+   "decision": "Advantage",
+   "signal": "One arm extended toward the non-offending team",
+   "outcome": "Play on; back to the penalty if no gain"
+  },
+  {
+   "decision": "Try",
+   "signal": "One arm raised, then pointing to the grounding",
+   "outcome": "5 points and a conversion attempt"
+  },
+  {
+   "decision": "Penalty try",
+   "signal": "Both arms raised and referee under the posts",
+   "outcome": "7 points; offender is often carded"
+  },
+  {
+   "decision": "Scrum",
+   "signal": "Arm pointing to the feeding team",
+   "outcome": "Restart with a scrum"
+  },
+  {
+   "decision": "Lineout",
+   "signal": "Arm pointing to the throwing team",
+   "outcome": "Restart with a lineout"
+  },
+  {
+   "decision": "High tackle",
+   "signal": "Hand touching the shoulder or neck area",
+   "outcome": "Penalty; yellow or red card if severe"
+  },
+  {
+   "decision": "Offside",
+   "signal": "Arm pointing to the offender and the offside line",
+   "outcome": "Penalty"
+  },
+  {
+   "decision": "Not releasing",
+   "signal": "Mimes holding the ball to the chest",
+   "outcome": "Penalty to the other team"
+  },
+  {
+   "decision": "Yellow card",
+   "signal": "Yellow card held above the head",
+   "outcome": "10 minutes off the field"
+  },
+  {
+   "decision": "Red card",
+   "signal": "Red card held above the head",
+   "outcome": "Sent off for the match (or 20-minute red card)"
+  },
+  {
+   "decision": "TMO review",
+   "signal": "Both hands draw a TV screen in the air",
+   "outcome": "Video check before the decision is final"
+  }
+ ]
+}

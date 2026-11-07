@@ -1,0 +1,6 @@
+recordings/raw/
+recordings/*.log
+data/history.json
+data/*.log
+node_modules/
+shots/

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="description" content="TryLine: live rugby second-screen companion">
+<title>TryLine</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="stylesheet" href="./styles/base.css">
+<link rel="stylesheet" href="./styles/ui-a.css">
+<link rel="stylesheet" href="./styles/ui-b.css">
+</head>
+<body>
+<noscript><div class="tl-card">TryLine needs JavaScript to show live matches. Please enable it.</div></noscript>
+<header id="tl-topbar">
+  <div class="tl-brand"><img class="tl-logo" src="./icons/icon.svg" alt="" width="28" height="28"><span class="tl-name">TryLine</span><span class="tl-beta">beta</span></div>
+  <div class="tl-topbar-right">
+    <button id="tl-install" class="tl-btn tl-btn-sm tl-hidden" type="button">Install</button>
+    <span id="tl-conn" class="tl-dot" data-status="offline" role="status" aria-label="Connection: offline" title="offline"></span><span id="tl-conn-txt" class="tl-conn-txt" data-status="offline" aria-hidden="true">Offline</span>
+    <button id="tl-settings-btn" class="tl-icon-btn" type="button" aria-label="Settings">&#9881;</button>
+  </div>
+</header>
+<div id="tl-toasts" aria-live="polite"></div>
+<main id="tl-main">
+  <section id="view-fixtures" class="tl-view">
+    <div class="tl-card tl-skeleton">Loading fixtures…</div>
+  </section>
+  <section id="view-match" class="tl-view tl-hidden">
+    <div id="tl-replaybar" class="tl-card tl-hidden" aria-label="Replay controls"></div>
+    <div id="match-header" class="tl-card tl-skeleton">Loading match…</div>
+    <nav id="match-tabs" class="tl-tabs" aria-label="Match sections">
+      <button type="button" data-tab="timeline" class="active">Timeline</button>
+      <button type="button" data-tab="pitch">Pitch</button>
+      <button type="button" data-tab="stats">Stats</button>
+      <button type="button" data-tab="lineups">Lineups</button>
+    </nav>
+    <div id="tab-timeline" class="tl-panel"></div>
+    <div id="tab-pitch" class="tl-panel tl-hidden"></div>
+    <div id="tab-stats" class="tl-panel tl-hidden"></div>
+    <div id="tab-lineups" class="tl-panel tl-hidden"></div>
+  </section>
+  <section id="view-glossary" class="tl-view tl-hidden">
+    <h2>Glossary</h2>
+    <input id="glossary-q" class="tl-input" type="search" placeholder="Search laws and ref calls…" autocomplete="off" aria-label="Search glossary">
+    <div id="glossary-list"><div class="tl-card tl-skeleton">Loading glossary…</div></div>
+  </section>
+  <section id="view-settings" class="tl-view tl-hidden">
+    <h2>Settings</h2>
+    <div class="tl-card">
+      <label class="tl-row"><span>Alert me on tries, cards, FT</span><input id="opt-notify" type="checkbox"></label>
+      <label class="tl-row"><span>Replay speed</span>
+        <select id="opt-speed" class="tl-input"><option value="1">1x</option><option value="5">5x</option><option value="20">20x</option></select></label>
+    </div>
+    <div class="tl-card">
+      <h3>Data sources &amp; honesty</h3>
+      <p>Scores and events come from ESPN and World Rugby public feeds. The clock is estimated for club matches. Pitch position is estimated from events, not tracked. Win probability is a model, not a promise.</p>
+    </div>
+  </section>
+</main>
+<nav id="tl-nav" aria-label="Primary">
+  <a href="#/" data-nav="fixtures" class="active"><span class="tl-ico">&#127945;</span>Fixtures</a>
+  <a href="#/match" data-nav="match"><span class="tl-ico">&#9201;</span>Match</a>
+  <a href="#/glossary" data-nav="glossary"><span class="tl-ico">&#128214;</span>Glossary</a>
+</nav>
+<script type="module" src="./src/app.js"></script>
+<script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); });
+}
+</script>
+</body>
+</html>
