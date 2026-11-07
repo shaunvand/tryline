@@ -1,15 +1,31 @@
 {
+  "id": "./",
   "name": "TryLine — rugby pocket companion",
   "short_name": "TryLine",
   "description": "Live rugby second-screen: scores, timeline, estimated pitch position, win probability.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["sports"],
+  "prefer_related_applications": false,
   "background_color": "#0b1020",
   "theme_color": "#0b1020",
   "icons": [
     { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-512-any.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Fixtures", "url": "./#/", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Glossary", "url": "./#/glossary", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ],
+  "screenshots": [
+    { "src": "icons/screenshot-match.png", "sizes": "780x1688", "type": "image/png", "form_factor": "narrow", "label": "Live match timeline" },
+    { "src": "icons/screenshot-fixtures.png", "sizes": "780x1688", "type": "image/png", "form_factor": "narrow", "label": "Fixtures" }
   ]
 }

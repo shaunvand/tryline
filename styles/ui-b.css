@@ -1,9 +1,9 @@
 /* TryLine UI part B: pitch, fixtures, glossary, alerts. Prefix tl-. */
-:root { --bg:#0b1020; --card:#141a2e; --fg:#e8ecf7; --muted:#93a0c0; --accent:#19c37d; --home:#3b82f6; --away:#f59e0b; --yellow:#facc15; --red:#ef4444; }
+:root { --bg:#0b1020; --card:#141a2e; --fg:#e8ecf7; --muted:#a6b1cc; --accent:#19c37d; --home:#3b82f6; --away:#f59e0b; --yellow:#facc15; --red:#ef4444; }
 
 .tl-empty { color: var(--muted); font-size: .9rem; padding: .5rem 0; margin: 0; }
 .tl-chip { display: inline-block; font-size: .7rem; font-weight: 700; padding: .1rem .45rem; border-radius: 999px; background: #232b45; color: var(--muted); }
-.tl-chip-live { background: var(--red); color: #fff; }
+.tl-chip-live { background: #c81e1e; color: #fff; }
 
 /* pitch */
 .tl-pitch { background: var(--card); border-radius: 12px; padding: .75rem; color: var(--fg); }
@@ -59,11 +59,11 @@
 @keyframes tl-in { from { transform: translateY(-10px); opacity: 0; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .tl-toast { animation: none; } }
 /* final fixes: thumb-sized tap targets (>= 40px) at 390px, stale/degraded states, connection text */
-#tl-replaybar .tl-chip, #tl-replaybar .tl-btn { min-height: 40px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: .85rem; padding: 0 12px; }
-.tl-rp-track { height: 40px; padding: 16px 0; box-sizing: border-box; background-clip: content-box; overflow: visible; border-radius: 0; }
+#tl-replaybar .tl-chip, #tl-replaybar .tl-btn { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; font-size: .85rem; padding: 0 12px; }
+.tl-rp-track { height: 44px; padding: 18px 0; box-sizing: border-box; background-clip: content-box; overflow: visible; border-radius: 0; }
 .tl-rp-fill { border-radius: 99px; }
-.tl-lchip { min-height: 40px; }
-.tl-btn-sm { min-height: 40px; }
+.tl-lchip { min-height: 44px; }
+.tl-btn-sm { min-height: 44px; }
 .tl-row { min-height: 44px; }
 .tl-conn-txt { font-size: .72rem; color: var(--muted); margin-left: -2px; }
 .tl-conn-txt[data-status=offline] { color: var(--red); }

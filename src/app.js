@@ -4,26 +4,13 @@ import { loadSettings, saveSettings, toggleLeague } from "./settings.js";
 import { loadFixtures, loadMatch } from "./adapters/index.js";
 import { displayStats } from "./linker.js";
 import { DEFAULT_LEAGUE_IDS } from "./leagues.js";
-import { live } from "./model/winprob.js";
-import { estimateZone, momentum } from "./model/pitch.js";
-import { renderHeader } from "./ui/header.js";
-import { renderTimeline } from "./ui/timeline.js";
-import { renderLineups } from "./ui/lineups.js";
-import { renderStats, deriveCounts } from "./ui/stats.js";
-import { renderPitch } from "./ui/pitch.js";
 import { renderFixtures } from "./ui/fixtures.js";
-import { renderGlossary, loadGlossary } from "./ui/glossary.js";
 import { diffEvents, formatAlert, showToast, notify, requestPermission } from "./ui/alerts.js";
 import { getTimeZone, setTimeZone, tzLabel, tzOptions } from "./time.js";
 import { loadFollowed, toggleFollow, isFollowed, matchInvolvesFollowed } from "./follow.js";
 import { renderFollowButton, renderFollowedChips } from "./ui/follow.js";
-import { activeCards, playerCounts } from "./model/sinbin.js";
-import { latestExplainer } from "./model/explain.js";
-import { renderSinBin } from "./ui/sinbin.js";
-import { renderExplainer } from "./ui/explain.js";
-import { renderPlayers } from "./ui/players.js";
 import { setBroadcastData, renderWatch, renderForm, countryOptions, detectCountry } from "./ui/watch.js";
-import { setCoverageData, renderCoverage, renderCoverageNote } from "./ui/coverage.js";
+import { platform, renderInstallHint, shouldShowHint, dismissHint, recordVisit } from "./ui/install.js";
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -36,13 +23,46 @@ const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch { /* ignore 
 const store = createStore({ view: "fixtures", fixtures: null, fixturesAt: 0, match: null, matchKey: null, matchErr: null, tab: "timeline" });
 let settings = loadSettings();
 let ratings = null;
-fetch(new URL("./model/ratings.json", import.meta.url)).then(r => (r.ok ? r.json() : null))
-  .then(r => { ratings = r; rerenderMatch(); }).catch(() => {});
-// static JSON (no JSON modules without a build): broadcast + coverage tables
+// run non-critical work after first paint, when the main thread is idle (TBT on slow phones)
+const idle = (fn, timeout = 2500) => (globalThis.requestIdleCallback ? requestIdleCallback(() => fn(), { timeout }) : setTimeout(fn, 200));
+// static JSON (no JSON modules without a build): ratings, broadcast + coverage tables
 const getJson = path => fetch(new URL(path, document.baseURI)).then(r => (r.ok ? r.json() : null)).catch(() => null);
-getJson("data/broadcast.json").then(j => { setBroadcastData(j); rerenderMatch(); });
-getJson("data/coverage.json").then(j => { setCoverageData(j); rerenderMatch(); if (store.get().view === "coverage") routeCoverage(); });
+let matchDataP = null;
+function loadMatchData() { // ratings (win prob) + where-to-watch: needed only once a match is shown
+  return (matchDataP ||= Promise.all([
+    fetch(new URL("./model/ratings.json", import.meta.url)).then(r => (r.ok ? r.json() : null)).then(r => { ratings = r; }).catch(() => {}),
+    getJson("data/broadcast.json").then(setBroadcastData),
+  ]).then(() => rerenderMatch()));
+}
+// lazy UI modules: fetched on first use with dynamic import(), never on the fixtures critical path
+const lazy = {};
+function lazyMod(name, load) {
+  if (!lazy[name]) lazy[name] = { p: load().then(m => (lazy[name].m = m)).catch(e => { delete lazy[name]; throw e; }) };
+  return lazy[name].p;
+}
+const coverageMod = () => lazyMod("coverage", async () => {
+  const [m, j] = await Promise.all([import("./ui/coverage.js"), getJson("data/coverage.json")]);
+  m.setCoverageData(j);
+  return m;
+});
+const playersMod = () => lazyMod("players", () => import("./ui/players.js"));
+// match-screen renderers + models: not needed to paint fixtures, so they stay off the boot path
+const matchUi = () => lazyMod("match", async () => {
+  const ms = await Promise.all([import("./model/winprob.js"), import("./model/pitch.js"), import("./ui/header.js"), import("./ui/timeline.js"),
+    import("./ui/lineups.js"), import("./ui/stats.js"), import("./ui/pitch.js"), import("./model/sinbin.js"), import("./model/explain.js"),
+    import("./ui/sinbin.js"), import("./ui/explain.js")]);
+  return Object.assign({}, ...ms);
+});
+const glossaryMod = () => lazyMod("glossary", () => import("./ui/glossary.js"));
+// full-time analysis (model + renderer), loaded only when a match reaches full time
+const postMatchMod = () => lazyMod("postmatch", async () => Object.assign({}, ...(await Promise.all([import("./model/postmatch.js"), import("./ui/postmatch.js")]))));
+const loaded = name => lazy[name]?.m || null;
 const country = () => settings.country || detectCountry();
+
+// ---- offline cache of the last good fixtures/match (an offline reload still shows scores) ----
+const FX_CACHE = "tl.lastFixtures", MATCH_CACHE = "tl.lastMatchData";
+const lsJson = k => { try { return JSON.parse(lsGet(k) || "null"); } catch { return null; } };
+const isOffline = () => navigator.onLine === false;
 
 // explainer cards the user closed (this tab only)
 const DISMISS_KEY = "tl.dismissedExplainers";
@@ -58,10 +78,8 @@ async function replayModule() {
   if (replayMod === undefined) replayMod = await import("./adapters/replay.js").catch(() => null);
   return replayMod;
 }
-async function replayList() {
-  const m = await replayModule();
-  try { return m ? (m.listReplays ? m.listReplays() : m.REPLAYS || []) : []; } catch { return []; }
-}
+const listOf = m => { try { return m ? (m.listReplays ? m.listReplays() : m.REPLAYS || []) : []; } catch { return []; } };
+async function replayList() { return listOf(await replayModule()); }
 
 // ---- connection dot ----
 function setConn(ok) {
@@ -74,8 +92,13 @@ function setConn(ok) {
   const t = $("#tl-conn-txt");
   if (t) { t.textContent = s === "live" ? "Online" : "Offline"; t.dataset.status = s; }
 }
-addEventListener("online", () => setConn(true));
-addEventListener("offline", () => setConn(false));
+addEventListener("online", () => { setConn(true); if (poll) poll.tick(); });
+addEventListener("offline", () => {
+  setConn(false);
+  const v = store.get().view;
+  if (v === "fixtures") renderFixturesView();
+  if (v === "match") rerenderMatch();
+});
 
 // ---- polling: one active loop, x2 backoff on errors (max 120 s), paused while hidden ----
 let poll = null;
@@ -96,41 +119,105 @@ function startPolling(fn, baseMs) {
   poll = p;
   p.tick();
 }
-document.addEventListener("visibilitychange", () => { if (!document.hidden && poll) poll.tick(); });
+// battery: in the background stop polling, the replay clock, CSS animations and the SVG pitch pulse
+function onVisibility() {
+  const hidden = document.hidden;
+  document.body.classList.toggle("tl-bg", hidden);
+  document.querySelectorAll("svg").forEach(svg => { try { if (hidden) svg.pauseAnimations(); else svg.unpauseAnimations(); } catch { /* ignore */ } });
+  if (replay) {
+    if (hidden && replay.playing) { try { replay.r.stop(); } catch { /* ignore */ } clearInterval(replay.iv); replay.iv = null; replay.resume = true; }
+    else if (!hidden && replay.resume) { replay.resume = false; replay.r.start(replay.onUpdate); replay.iv = setInterval(updateReplayProgress, 1000); }
+  }
+  if (!hidden && poll) poll.tick();
+}
+document.addEventListener("visibilitychange", onVisibility);
 
 // ---- views ----
 const VIEWS = ["fixtures", "match", "glossary", "settings", "coverage"];
 function show(view) {
   for (const v of VIEWS) $(`#view-${v}`)?.classList.toggle("tl-hidden", v !== view);
-  document.querySelectorAll("#tl-nav a").forEach(a => a.classList.toggle("active", a.dataset.nav === view));
+  document.querySelectorAll("#tl-nav a").forEach(a => {
+    const on = a.dataset.nav === view;
+    a.classList.toggle("active", on);
+    if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+  });
   store.set({ view });
 }
 
 // ---- fixtures ----
+// 4G: today + tomorrow first (paints sooner), the full week once the main thread is idle
+let fullWeek = false, fullWeekQueued = false;
 async function refreshFixtures() {
   const leagueIds = [...new Set([...DEFAULT_LEAGUE_IDS, ...settings.leagues])];
-  const { fixtures, espnOk, wrOk } = await loadFixtures({ leagueIds });
+  const { fixtures, espnOk, wrOk } = await loadFixtures({ leagueIds, days: fullWeek ? 7 : 2 });
   const down = !espnOk && !wrOk;
   // an outage must not look like "no matches": keep the last good list and say so
   if (down) store.set({ fixturesDown: Date.now(), fixtures: store.get().fixtures || null });
-  else store.set({ fixtures, fixturesAt: Date.now(), fixturesDown: 0 });
+  else {
+    store.set({ fixtures, fixturesAt: Date.now(), fixturesDown: 0 });
+    if (fullWeek) idle(() => lsSet(FX_CACHE, JSON.stringify({ at: store.get().fixturesAt, fixtures })));
+  }
   await renderFixturesView();
   if (down) throw new Error("No fixture source answered");
+  if (!fullWeek && !fullWeekQueued) {
+    fullWeekQueued = true;
+    idle(async () => {
+      fullWeek = true;
+      await replayModule();
+      if (store.get().view === "fixtures") await refreshFixtures().catch(() => {});
+      idle(() => matchUi().catch(() => {}), 5000); // warm the match screen so a tap opens it at once
+    });
+  }
 }
-async function renderFixturesView() {
+const OFFLINE_TXT = "You\u2019re offline \u2014 last scores shown";
+function offlineBanner(at) {
+  return `<p class="tl-card tl-offline tl-banner" role="status">${OFFLINE_TXT}${at ? ` (from ${esc(hhmmss(at))})` : ""}.</p>`;
+}
+function installHint() {
+  const p = platform();
+  if (p === "standalone" || installed || !shouldShowHint()) return "";
+  return renderInstallHint(p, !!deferredInstall);
+}
+function renderFixturesView() {
   const st = store.get();
-  const banner = st.fixturesDown
-    ? `<p class="tl-card tl-err tl-banner" role="alert">Could not reach ESPN or World Rugby${st.fixtures ? `, showing data from ${esc(hhmmss(st.fixturesAt))}` : ""}. Retrying automatically.</p>` : "";
-  if (!st.fixtures) { if (banner && st.view === "fixtures") $("#view-fixtures").innerHTML = banner; return; }
-  const replays = await replayList();
-  if (store.get().view !== "fixtures") return;
+  const banner = isOffline() ? offlineBanner(st.fixtures && st.fixturesAt)
+    : st.fixturesDown
+      ? `<p class="tl-card tl-err tl-banner" role="alert">Could not reach ESPN or World Rugby${st.fixtures ? `, showing data from ${esc(hhmmss(st.fixturesAt))}` : ""}. Retrying automatically.</p>` : "";
+  if (st.view !== "fixtures") return;
+  if (!st.fixtures) { if (banner) $("#view-fixtures").innerHTML = banner; return; }
+  // the replay list needs adapters/replay.js: never wait for it; load it when idle, then re-render
+  const replays = replayMod !== undefined ? listOf(replayMod) : [];
+  if (replayMod === undefined && fullWeek) replayModule().then(m => { if (m && store.get().view === "fixtures") renderFixturesView(); });
   const followed = loadFollowed();
   const teamsSeen = st.fixtures.flatMap(f => [f.home, f.away]).filter(Boolean);
-  $("#view-fixtures").innerHTML = banner + renderFollowedChips(followed, teamsSeen) +
+  const html = banner + installHint() + renderFollowedChips(followed, teamsSeen) +
     renderFixtures({ fixtures: st.fixtures, selectedLeagueIds: settings.leagues, nowMs: Date.now(), replays, followed }) +
     `<p class="tl-src">Times in ${esc(tzLabel())} · updated ${esc(hhmmss(st.fixturesAt))} · ESPN + World Rugby public feeds</p>`;
+  paintFixtures(html);
+}
+// First paint of the list goes in one section per frame: the cold text layout of the whole list in one task
+// blocks the main thread for 100+ ms on a mid-range phone. Later refreshes swap the HTML in one go.
+let fxPainted = false;
+function paintFixtures(html) {
+  const view = $("#view-fixtures");
+  if (fxPainted) { view.innerHTML = html; return; }
+  fxPainted = true;
+  const t = document.createElement("template");
+  t.innerHTML = html;
+  const wrap = t.content.querySelector(".tl-fixtures");
+  const rest = wrap ? [...wrap.children].slice(2) : [];
+  rest.forEach(n => n.remove());
+  view.replaceChildren(t.content);
+  const step = () => {
+    if (!wrap.isConnected || !rest.length) return;
+    wrap.append(rest.shift());
+    if (rest.length) requestAnimationFrame(step);
+  };
+  if (rest.length) requestAnimationFrame(step);
 }
 $("#view-fixtures").addEventListener("click", e => {
+  if (e.target.closest("[data-install-dismiss]")) { dismissHint(); e.target.closest(".tl-install-hint")?.remove(); return; }
+  if (e.target.closest("[data-install-btn]")) { runInstall(); return; }
   const u = e.target.closest("button[data-unfollow]");
   if (u) { toggleFollow(u.dataset.unfollow); renderFixturesView(); return; }
   const b = e.target.closest("button[data-league]");
@@ -165,13 +252,20 @@ function applyMatch(m, key) {
   if (st.matchKey !== key || !m) return; // route changed while loading
   const prev = st.match;
   if (prev && !key.startsWith("replay/")) m = carryForward(prev, m);
-  if (!prev) (m.events || []).forEach(e => remember(e, m));
+  // a match restored from the offline cache counts as a first load: no alert burst for events missed meanwhile
+  if (!prev || st.matchFromCache) (m.events || []).forEach(e => remember(e, m));
   else {
     for (const e of diffEvents(prev.events, m.events)) if (!seen(e, m)) { remember(e, m); fireAlert(e, m); }
     if (prev.status?.state === "in" && m.status?.state === "post") fireAlert({ type: "full_time", id: "ft" }, m);
   }
-  store.set({ match: m, matchErr: null, matchOkAt: Date.now() });
+  store.set({ match: m, matchErr: null, matchOkAt: Date.now(), matchFromCache: false });
+  if (!key.startsWith("replay/")) saveMatchSoon(key, m);
   rerenderMatch();
+}
+let saveTimer = 0;
+function saveMatchSoon(key, m) { // throttled: at most one localStorage write per poll, off the render path
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => lsSet(MATCH_CACHE, JSON.stringify({ key, at: Date.now(), match: m })), 1500);
 }
 
 // A partial feed failure (plays/summary down) must not blank a screen that had data: keep the last good sections.
@@ -197,16 +291,29 @@ function rerenderMatch() {
     head.innerHTML = `<p>No match open.</p><p><a class="tl-btn" href="#/">Pick a match from Fixtures</a></p>`;
     for (const t of ["timeline", "pitch", "stats", "lineups"]) $(`#tab-${t}`).innerHTML = "";
     $("#match-explainer").innerHTML = "";
+    renderPostMatchSection(null);
     return;
   }
   if (!m) {
     $("#match-explainer").innerHTML = "";
+    renderPostMatchSection(null);
     head.classList.toggle("tl-skeleton", !matchErr);
     head.innerHTML = matchErr
       ? `<p class="tl-err">Could not load this match: ${esc(matchErr)}</p><p class="tl-src">Retrying automatically. <a href="#/">Back to fixtures</a></p>`
       : "Loading match…";
     return;
   }
+  if (!matchDataP) idle(loadMatchData, 800);
+  if (!loaded("coverage")) coverageMod().then(rerenderMatch, () => {});
+  const U = loaded("match");
+  if (!U) {
+    matchUi().then(rerenderMatch, () => { head.innerHTML = `<p class="tl-err">Could not load the match screen.</p>`; });
+    head.classList.add("tl-skeleton");
+    head.textContent = "Loading match…";
+    return;
+  }
+  const { live, estimateZone, momentum, renderHeader, renderTimeline, renderLineups, renderStats, deriveCounts, renderPitch,
+    activeCards, playerCounts, latestExplainer, renderSinBin, renderExplainer } = U;
   let prob = null;
   try { if (m.status?.state !== "post") prob = live({ ratings, match: m }); } catch (e) { console.warn("winprob", e); }
   const src = m.source || {}, isReplay = src.name === "replay";
@@ -218,17 +325,20 @@ function rerenderMatch() {
   let cards = [];
   try { cards = activeCards(m); } catch (e) { console.warn("sinbin", e); }
   const leagueId = m.league?.id;
-  head.innerHTML = renderHeader({ match: m, prob }) +
+  const offline = !isReplay && isOffline();
+  head.innerHTML = (offline ? `<p class="tl-card tl-offline tl-stale-msg" role="status">${OFFLINE_TXT}${okAt ? ` (from ${esc(hhmmss(okAt))})` : ""}.</p>` : "") +
+    renderHeader({ match: m, prob }) +
     `<div class="tl-follow-row">${renderFollowButton(m.home, isFollowed(m.home, followed))}<span class="tl-muted tl-follow-cap">Follow</span>${renderFollowButton(m.away, isFollowed(m.away, followed))}</div>` +
     (cards.length ? renderSinBin({ match: m, cards, counts: playerCounts(m) }) +
       (m.status?.clockSource === "estimated" ? `<p class="tl-src">Sin-bin times use the estimated clock</p>` : "") : "") +
     renderWatch({ leagueId, country: country() }) +
     renderForm({ match: m }) +
-    (stale ? `<p class="tl-err tl-stale-msg" role="status">Data stale since ${esc(hhmmss(okAt))} · retrying</p>` : "") +
+    (!offline && stale ? `<p class="tl-err tl-stale-msg" role="status">Data stale since ${esc(hhmmss(okAt))} · retrying</p>` : "") +
     (src.degraded?.length ? `<p class="tl-err tl-stale-msg">Feed degraded, showing last ${esc(src.degraded.join(", "))}</p>` : "") +
     `<p class="tl-src">${esc(SRC[src.name] || src.name || "")}${src.fetchedAt && !isReplay ? " · updated " + esc(hhmmss(Date.parse(src.fetchedAt))) : ""}` +
     `${src.note ? " · " + esc(src.note) : ""}</p>` +
-    renderCoverageNote(leagueId);
+    (loaded("coverage") ? loaded("coverage").renderCoverageNote(leagueId) : "");
+  renderPostMatchSection(m);
   let ex = null;
   try { ex = latestExplainer(m, m.status?.clockSec); } catch (e) { console.warn("explainer", e); }
   $("#match-explainer").innerHTML = ex && !dismissed.has(String(ex.event.id)) ? renderExplainer({ ex: ex.ex, event: ex.event, match: m }) : "";
@@ -239,17 +349,53 @@ function rerenderMatch() {
     $("#tab-pitch").innerHTML = renderPitch({ match: m, zone, momentum: mom });
   }
   // Players live inside Stats (raw m: displayStats strips stats.players); keeps the tab strip at 4 for 390px screens
-  if (tab === "stats") $("#tab-stats").innerHTML = renderStats({ match: { ...m, stats: displayStats(m.stats) }, derived: deriveCounts(m) }) +
-    `<h3 class="tl-pl-head" id="players">Players</h3>` + renderPlayers({ match: m, nowSec: m.status?.clockSec });
+  if (tab === "stats") {
+    const pm = loaded("players");
+    if (!pm) playersMod().then(rerenderMatch, () => {});
+    // keep the open/closed state of the per-team <details> across re-renders
+    const open = [...document.querySelectorAll("#tab-stats details.tl-pl-team")].map(d => d.open);
+    $("#tab-stats").innerHTML = renderStats({ match: { ...m, stats: displayStats(m.stats) }, derived: deriveCounts(m) }) +
+      `<h3 class="tl-pl-head" id="players">Players</h3>` + (pm ? pm.renderPlayers({ match: m, nowSec: m.status?.clockSec }) : `<p class="tl-muted">Loading players…</p>`);
+    document.querySelectorAll("#tab-stats details.tl-pl-team").forEach((d, i) => { if (open[i]) d.open = true; });
+  }
   if (tab === "lineups") $("#tab-lineups").innerHTML = renderLineups({ match: m });
+  if (document.hidden) document.querySelectorAll("#tab-pitch svg").forEach(svg => { try { svg.pauseAnimations(); } catch { /* ignore */ } });
   const H = m.home.abbr || m.home.name, A = m.away.abbr || m.away.name;
+  // screen readers hear the score only when it changes (the header itself is rebuilt every tick)
+  const said = `${m.home.name || H} ${m.home.score ?? 0}, ${m.away.name || A} ${m.away.score ?? 0}`;
+  const lr = $("#tl-score-live");
+  if (lr && m.status?.state !== "pre" && lr.dataset.said !== said) { lr.dataset.said = said; lr.textContent = said; }
   document.title = m.status?.state === "pre" ? `${H} v ${A} · TryLine`
     : `${H} ${m.home.score ?? 0}-${m.away.score ?? 0} ${A}${m.status?.clockLabel ? " " + m.status.clockLabel : ""} · TryLine`;
 }
 
+// ---- full-time analysis: shown above the live widgets once status.state is "post" (live and replay) ----
+let pmHtml = "", pmFixturesTried = null;
+function renderPostMatchSection(m) {
+  let el = $("#match-postmatch");
+  if (!el) { el = document.createElement("div"); el.id = "match-postmatch"; $("#view-match").insertBefore(el, $("#tl-replaybar").nextSibling); }
+  let html = "";
+  if (m && m.status?.state === "post") {
+    const P = loaded("postmatch");
+    if (!P) { postMatchMod().then(rerenderMatch, () => {}); return; }
+    const st = store.get();
+    if (!st.fixtures && pmFixturesTried !== st.matchKey) { // "What's next" needs fixtures: fetch once if none are loaded
+      pmFixturesTried = st.matchKey;
+      loadFixtures({ leagueIds: [...new Set([...DEFAULT_LEAGUE_IDS, ...settings.leagues])], days: 7 })
+        .then(r => { if (!store.get().fixtures && (r.espnOk || r.wrOk)) { store.set({ fixtures: r.fixtures, fixturesAt: Date.now() }); rerenderMatch(); } })
+        .catch(() => {});
+    }
+    try {
+      const pm = P.buildPostMatch(m, { ratings, fixtures: st.fixtures, nowMs: Date.now() });
+      html = P.renderPostMatch({ pm, match: m, open: el.querySelector("details.tl-pm")?.open ?? true, followed: loadFollowed(), country: country() });
+    } catch (e) { console.warn("postmatch", e); }
+  }
+  if (html !== pmHtml) { pmHtml = html; el.innerHTML = html; } // unchanged: keep the DOM (focus, share message)
+}
+
 function setTab(tab) {
   store.set({ tab });
-  document.querySelectorAll("#match-tabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  document.querySelectorAll("#match-tabs button").forEach(b => { b.classList.toggle("active", b.dataset.tab === tab); b.setAttribute("aria-pressed", String(b.dataset.tab === tab)); if (b.dataset.tab === tab) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current"); });
   for (const t of ["timeline", "pitch", "stats", "lineups"]) $(`#tab-${t}`).classList.toggle("tl-hidden", t !== tab);
   rerenderMatch();
 }
@@ -258,13 +404,21 @@ $("#match-tabs").addEventListener("click", e => { const b = e.target.closest("bu
 $("#view-match").addEventListener("click", e => {
   const f = e.target.closest("button[data-follow]");
   if (f) { toggleFollow({ name: f.dataset.name }); rerenderMatch(); return; }
+  const sh = e.target.closest("[data-pm-share]");
+  if (sh) { loaded("postmatch")?.sharePostMatch(sh); return; }
   const x = e.target.closest("[data-dismiss-explainer]");
   if (x) { dismissExplainer(x.dataset.dismissExplainer); $("#match-explainer").innerHTML = ""; }
 });
 
 function openMatch(key) {
   alerted = [];
-  store.set({ match: null, matchKey: key, matchErr: null });
+  matchUi().catch(() => {});
+  // last good copy of this match (offline reload); its events count as already announced
+  const c = key.startsWith("replay/") ? null : lsJson(MATCH_CACHE);
+  const m = c && c.key === key && c.match ? c.match : null;
+  if (m) (m.events || []).forEach(e => remember(e, m));
+  $("#tl-score-live").dataset.said = "";
+  store.set({ match: m, matchKey: key, matchErr: null, matchOkAt: m ? c.at : 0, matchFromCache: !!m });
   show("match");
   rerenderMatch();
 }
@@ -347,20 +501,24 @@ async function routeReplay(slug) {
 async function routeGlossary(q) {
   show("glossary");
   if (q != null) $("#glossary-q").value = q;
-  try { await loadGlossary(); } catch { $("#glossary-list").innerHTML = `<p class="tl-err">Glossary could not load.</p>`; return; }
+  try { await (await glossaryMod()).loadGlossary(); } catch { $("#glossary-list").innerHTML = `<p class="tl-err">Glossary could not load.</p>`; return; }
   renderGlossaryList();
 }
 function renderGlossaryList() {
+  const g = loaded("glossary");
+  if (!g) return;
   const list = $("#glossary-list");
-  list.innerHTML = renderGlossary({ query: $("#glossary-q").value });
+  list.innerHTML = g.renderGlossary({ query: $("#glossary-q").value });
   list.querySelector(".tl-gl-search")?.remove(); // the shell's #glossary-q is the search box
 }
 $("#glossary-q").addEventListener("input", () => { if (store.get().view === "glossary") renderGlossaryList(); });
 
 // ---- coverage ----
-function routeCoverage() {
+async function routeCoverage() {
   show("coverage");
-  $("#view-coverage").innerHTML = renderCoverage();
+  let m;
+  try { m = await coverageMod(); } catch { $("#view-coverage").innerHTML = `<div class="tl-card"><p class="tl-err">Coverage could not load.</p></div>`; return; }
+  if (store.get().view === "coverage") $("#view-coverage").innerHTML = m.renderCoverage();
 }
 
 // ---- settings ----
@@ -388,17 +546,39 @@ $("#opt-speed").addEventListener("change", e => {
 });
 $("#tl-settings-btn").addEventListener("click", () => { location.hash = "#/settings"; });
 
-// ---- install prompt ----
-let deferredInstall = null;
-addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredInstall = e; $("#tl-install").classList.remove("tl-hidden"); });
-$("#tl-install").addEventListener("click", async () => {
+// ---- install prompt (Android/desktop: beforeinstallprompt; iOS Safari: Share -> Add to Home Screen hint) ----
+let deferredInstall = null, installed = false;
+function syncInstallUi() {
+  const p = platform(), can = !!deferredInstall && !installed;
+  $("#tl-install").classList.toggle("tl-hidden", !can);
+  $("#opt-install").classList.toggle("tl-hidden", !can);
+  $("#opt-install-txt").textContent = p === "standalone" || installed ? "TryLine is installed on this device."
+    : p === "ios-safari" ? "In Safari, tap Share, then \u2018Add to Home Screen\u2019."
+    : can ? "Add TryLine to your home screen for full-screen, one-tap access."
+    : "Use your browser menu to install TryLine or add it to your home screen.";
+  if (store.get().view === "fixtures" && store.get().fixtures) renderFixturesView();
+}
+async function runInstall() {
   if (!deferredInstall) return;
-  deferredInstall.prompt();
-  try { await deferredInstall.userChoice; } catch { /* ignore */ }
+  const ev = deferredInstall;
   deferredInstall = null;
-  $("#tl-install").classList.add("tl-hidden");
+  ev.prompt();
+  try { const c = await ev.userChoice; if (c && c.outcome === "accepted") installed = true; } catch { /* ignore */ }
+  syncInstallUi();
+}
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferredInstall = e; syncInstallUi(); });
+$("#tl-install").addEventListener("click", runInstall);
+$("#opt-install").addEventListener("click", runInstall);
+addEventListener("appinstalled", () => { installed = true; deferredInstall = null; syncInstallUi(); });
+
+// external links leave in a new tab (keeps the standalone app open); in-app hash links stay in the app
+document.addEventListener("click", e => {
+  const a = e.target.closest && e.target.closest("a[href]");
+  if (!a || a.target) return;
+  let u;
+  try { u = new URL(a.getAttribute("href"), location.href); } catch { return; }
+  if (u.origin !== location.origin) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
 });
-addEventListener("appinstalled", () => $("#tl-install").classList.add("tl-hidden"));
 
 // ---- router ----
 function route() {
@@ -426,6 +606,14 @@ function route() {
   startPolling(refreshFixtures, () => 60e3);
 }
 addEventListener("hashchange", route);
-syncSettingsForm();
+recordVisit();
+// last good fixtures from a previous visit: shown at once (and offline) until the network answers
+{
+  const c = lsJson(FX_CACHE);
+  if (c && Array.isArray(c.fixtures)) store.set({ fixtures: c.fixtures, fixturesAt: c.at || 0 });
+}
+// yield once so the module-graph evaluation and the first route run as two short tasks, not one long one (TBT)
+await new Promise(r => setTimeout(r, 0));
+syncInstallUi();
 setTab("timeline");
 route();

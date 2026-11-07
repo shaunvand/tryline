@@ -10,6 +10,7 @@ const ICONS = {
 const SCORING = new Set(["try", "penalty_try", "conversion", "penalty_goal", "drop_goal"]);
 const TITLES = { try: "Try", penalty_try: "Penalty try", conversion: "Conversion", penalty_goal: "Penalty goal", drop_goal: "Drop goal",
   missed_kick: "Missed kick", yellow_card: "Yellow card", red_card: "Red card", sub_off: "Off", sub_on: "On" };
+export { ICONS as TIMELINE_ICONS, TITLES as TIMELINE_TITLES }; // reused by ui/postmatch.js
 
 const half = (p) => (p === 1 ? "1st half" : p === 2 ? "2nd half" : p === 3 ? "Extra time (1st)" : p === 4 ? "Extra time (2nd)" : "Match");
 

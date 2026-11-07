@@ -3,15 +3,50 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b1020">
+<meta name="theme-color" content="#0b1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0b1020" media="(prefers-color-scheme: light)">
 <meta name="description" content="TryLine: live rugby second-screen companion">
+<meta name="color-scheme" content="dark">
+<meta name="format-detection" content="telephone=no">
 <title>TryLine</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TryLine">
+<meta name="application-name" content="TryLine">
+<link rel="apple-touch-startup-image" href="./icons/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./icons/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="./icons/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="preconnect" href="https://site.api.espn.com" crossorigin>
+<link rel="preconnect" href="https://sports.core.api.espn.com" crossorigin>
+<link rel="preconnect" href="https://site.web.api.espn.com" crossorigin>
+<link rel="preconnect" href="https://api.wr-rims-prod.pulselive.com" crossorigin>
+<link rel="preconnect" href="https://a.espncdn.com">
 <link rel="stylesheet" href="./styles/base.css">
 <link rel="stylesheet" href="./styles/ui-a.css">
 <link rel="stylesheet" href="./styles/ui-b.css">
+<link rel="stylesheet" href="./styles/postmatch.css">
+<!-- static ES-module graph of src/app.js: fetched in parallel instead of a waterfall (no bundler) -->
+<link rel="modulepreload" href="./src/app.js">
+<link rel="modulepreload" href="./src/store.js">
+<link rel="modulepreload" href="./src/settings.js">
+<link rel="modulepreload" href="./src/leagues.js">
+<link rel="modulepreload" href="./src/adapters/index.js">
+<link rel="modulepreload" href="./src/adapters/espn.js">
+<link rel="modulepreload" href="./src/teams.js">
+<link rel="modulepreload" href="./src/adapters/wr.js">
+<link rel="modulepreload" href="./src/linker.js">
+<link rel="modulepreload" href="./src/ui/fixtures.js">
+<link rel="modulepreload" href="./src/follow.js">
+<link rel="modulepreload" href="./src/time.js">
+<link rel="modulepreload" href="./src/ui/alerts.js">
+<link rel="modulepreload" href="./src/ui/follow.js">
+<link rel="modulepreload" href="./src/ui/watch.js">
+<link rel="modulepreload" href="./src/ui/install.js">
 </head>
 <body>
 <noscript><div class="tl-card">TryLine needs JavaScript to show live matches. Please enable it.</div></noscript>
@@ -20,28 +55,34 @@
   <div class="tl-topbar-right">
     <button id="tl-install" class="tl-btn tl-btn-sm tl-hidden" type="button">Install</button>
     <span id="tl-conn" class="tl-dot" data-status="offline" role="status" aria-label="Connection: offline" title="offline"></span><span id="tl-conn-txt" class="tl-conn-txt" data-status="offline" aria-hidden="true">Offline</span>
-    <button id="tl-settings-btn" class="tl-icon-btn" type="button" aria-label="Settings">&#9881;</button>
+    <button id="tl-settings-btn" class="tl-icon-btn" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
 </header>
 <div id="tl-toasts" aria-live="polite"></div>
+<div id="tl-score-live" class="tl-sr" aria-live="polite" aria-atomic="true"></div>
 <main id="tl-main">
   <section id="view-fixtures" class="tl-view">
-    <div class="tl-card tl-skeleton">Loading fixtures…</div>
+    <div class="tl-skel-fx" role="status"><p class="tl-skel-txt">Loading fixtures…</p><span class="tl-font-warm" aria-hidden="true"><b class="w6">0</b><b class="w7">0</b><b class="w8">0</b></span><div class="tl-skel-chips"><i></i><i></i><i></i></div><i class="tl-skel-h"></i><i class="tl-skel-row"></i><i class="tl-skel-row"></i><i class="tl-skel-row"></i><i class="tl-skel-h"></i><i class="tl-skel-row"></i><i class="tl-skel-row"></i><i class="tl-skel-row"></i><i class="tl-skel-row"></i></div>
   </section>
   <section id="view-match" class="tl-view tl-hidden">
     <div id="tl-replaybar" class="tl-card tl-hidden" aria-label="Replay controls"></div>
+    <div id="match-postmatch"></div>
+    <div class="tl-match-side">
     <div id="match-header" class="tl-card tl-skeleton">Loading match…</div>
     <div id="match-explainer"></div>
+    </div>
+    <div class="tl-match-main">
     <nav id="match-tabs" class="tl-tabs" aria-label="Match sections">
-      <button type="button" data-tab="timeline" class="active">Timeline</button>
-      <button type="button" data-tab="pitch">Pitch</button>
-      <button type="button" data-tab="stats">Stats</button>
-      <button type="button" data-tab="lineups">Lineups</button>
+      <button type="button" data-tab="timeline" class="active" aria-pressed="true" aria-current="true">Timeline</button>
+      <button type="button" data-tab="pitch" aria-pressed="false">Pitch</button>
+      <button type="button" data-tab="stats" aria-pressed="false">Stats</button>
+      <button type="button" data-tab="lineups" aria-pressed="false">Lineups</button>
     </nav>
     <div id="tab-timeline" class="tl-panel"></div>
     <div id="tab-pitch" class="tl-panel tl-hidden"></div>
     <div id="tab-stats" class="tl-panel tl-hidden"></div>
     <div id="tab-lineups" class="tl-panel tl-hidden"></div>
+    </div>
   </section>
   <section id="view-glossary" class="tl-view tl-hidden">
     <h2>Glossary</h2>
@@ -55,6 +96,10 @@
       <label class="tl-row"><span>Only alert for teams I follow</span><input id="opt-followed-only" type="checkbox"></label>
       <label class="tl-row"><span>Replay speed</span>
         <select id="opt-speed" class="tl-input"><option value="1">1x</option><option value="5">5x</option><option value="20">20x</option></select></label>
+    </div>
+    <div id="opt-install-card" class="tl-card">
+      <h3>Install app</h3>
+      <div class="tl-row"><span id="opt-install-txt">Add TryLine to your home screen for full-screen, one-tap access.</span><button id="opt-install" class="tl-btn tl-btn-sm tl-hidden" type="button">Install app</button></div>
     </div>
     <div class="tl-card">
       <h3>Region</h3>
@@ -70,9 +115,9 @@
   <section id="view-coverage" class="tl-view tl-hidden"><div class="tl-card tl-skeleton">Loading coverage…</div></section>
 </main>
 <nav id="tl-nav" aria-label="Primary">
-  <a href="#/" data-nav="fixtures" class="active"><span class="tl-ico">&#127945;</span>Fixtures</a>
-  <a href="#/match" data-nav="match"><span class="tl-ico">&#9201;</span>Match</a>
-  <a href="#/glossary" data-nav="glossary"><span class="tl-ico">&#128214;</span>Glossary</a>
+  <a href="#/" data-nav="fixtures" class="active" aria-current="page"><svg class="tl-ico" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><ellipse cx="12" cy="12" rx="10" ry="6" transform="rotate(-35 12 12)"/><path d="M8.5 15.5l7-7M10 11.5l2.5 2.5M12 9.5l2.5 2.5"/></svg>Fixtures</a>
+  <a href="#/match" data-nav="match"><svg class="tl-ico" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M10 2h4M12 2v3"/></svg>Match</a>
+  <a href="#/glossary" data-nav="glossary"><svg class="tl-ico" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>Glossary</a>
 </nav>
 <script type="module" src="./src/app.js"></script>
 <script>

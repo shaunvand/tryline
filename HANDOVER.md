@@ -28,5 +28,13 @@ Shaun has handed TryLine to Matt. Matt owns it from here.
 - Job ef68af43: full mobile-ready pass (safe areas, thumb nav, install/offline, Lighthouse) (queued after 525fc1d8).
 - When both are done, their changes land in this folder and the live site. Check git log / this file for updates.
 
+## Change log
+- 2026-11-07 (Matt's builder): Post-match "Full-time analysis" screen added (competitor audit item 10, recap card).
+  New: src/model/postmatch.js, src/ui/postmatch.js, styles/postmatch.css, tests/postmatch.test.js.
+  Small additive edits: src/app.js (lazy loader, render call, share click), index.html (CSS link + #match-postmatch),
+  sw.js (3 files precached, VERSION tryline-v7), src/ui/timeline.js (exports its icons), README.md, ARCHITECTURE.md.
+  NOT RUN YET: someone with a shell must run `npm test` and then deploy. The only replay recording stops at 21',
+  so demo mode will not reach full time until a full-match recording is added.
+
 ## Known limits for Matt's builders
 - They can edit files but cannot run code (no npm, python, git push). Deploys and tests need someone with a shell.

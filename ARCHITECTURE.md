@@ -66,6 +66,21 @@ estimate = max(last play clock, wall-clock since kickoff adjusted for half time)
 - Clock shows "est." when derived from wall clock.
 - Team stats panel says "Not in free feed" when `stats` is null, instead of inventing numbers.
 
+## Post-match (full-time analysis, added 2026-11-07)
+- `src/model/postmatch.js`: pure, no DOM. `buildPostMatch(match, {ratings, fixtures, nowMs})` returns null unless
+  `status.state === "post"`, else `{final, ht, shape, story, moments, sinbin, discipline, top, decided, share, next}`;
+  each part is null/[] when its data is missing. Building blocks: `scoreTimeline` (running score: feed scores, else
+  points by type), `halfTimeScore`, `gameShape`, `winProbStory` (re-runs `winprob.live()` every minute and just
+  before/after each score and card; biggest swing + turning point = last time the winner's chance went above 50%),
+  `keyMoments`, `sinBinImpact` (spell lengths from `sinbin.js`), `disciplineRows`, `topBySide` (`rating.js`),
+  `whatDecidedIt` (fixed scored rules, top 3), `shareText`, `nextFixture`.
+- `src/ui/postmatch.js`: HTML strings (inline SVG chart, no libraries) + `shareOrCopy` (Web Share, else clipboard).
+  Reuses timeline icons, `watch.js`, `ui/follow.js`.
+- `src/app.js` lazy-loads both modules when a match reaches full time and renders into `#match-postmatch` (top of
+  the match view; the live widgets stay below). If no fixtures are loaded it fetches the 7-day list once for "What's next".
+- Honesty: win-chance numbers are labelled "TryLine model estimate", ratings "TryLine rating (own formula)",
+  "What decided it" says it is written by fixed rules (no AI).
+
 ## Polling
 - Live match: scoreboard every 15 s, plays every 15 s, summary (lineups) every 5 min.
 - Fixtures: every 60 s on the fixtures screen. Back off ×2 on HTTP errors, max 2 min.

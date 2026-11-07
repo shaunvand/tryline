@@ -11,6 +11,9 @@ Mobile-first live-rugby second-screen PWA: scores, timeline, estimated pitch pos
 - Time-zone and country settings; all kick-off times follow the chosen zone (device zone by default).
 - Data coverage page (`#/coverage`) and glossary deep links (`#/glossary?q=Try`).
 
+## Post-match (full-time analysis)
+When a match's `status.state` is `"post"` (live or replay), a "Full-time analysis" section opens above the live widgets: result + half-time score + game shape, win-chance story chart (biggest swing, turning point), key moments, sin-bin impact, discipline and set piece (only fields the feed has), top 3 per side (TryLine rating, own formula), "What decided it" (fixed rules, no AI), a "Share result" button (Web Share, else clipboard; plain text with the app link) and what's next (next fixture, where to watch, follow). Each block hides itself when its data is missing. Code: `src/model/postmatch.js` (pure), `src/ui/postmatch.js` (render), `styles/postmatch.css`. Tests: `tests/postmatch.test.js`.
+
 ## Run locally
 ```
 python -m http.server 8787

@@ -14,9 +14,15 @@ export function dayLabel(ms, nowMs) {
   return fmtDay(ms, nowMs);
 }
 
+// ESPN's CDN resizes on the fly: a 40 px logo is ~4 KB instead of the 40 KB 500 px original.
+export const logoThumb = (url, px) => {
+  const m = /^https:\/\/a\.espncdn\.com(\/i\/teamlogos\/[^?#]+\.png)$/.exec(String(url || ""));
+  return m ? `https://a.espncdn.com/combiner/i?img=${m[1]}&w=${px}&h=${px}` : url;
+};
+
 function team(t) {
   t = t || {};
-  const logo = t.logo ? `<img class="tl-logo" src="${esc(t.logo)}" alt="" loading="lazy" width="20" height="20">` : "";
+  const logo = t.logo ? `<img class="tl-logo" src="${esc(logoThumb(t.logo, 40))}" alt="" loading="lazy" decoding="async" width="20" height="20">` : "";
   return `${logo}<span class="tl-fx-abbr">${esc(t.abbr || t.name || "TBC")}</span>`;
 }
 

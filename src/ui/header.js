@@ -1,4 +1,5 @@
 import { fmtTime, fmtDay, tzLabel } from "../time.js";
+import { logoThumb } from "./fixtures.js";
 // Match header: crests, score, status chip, clock, win-probability bar. Pure: returns HTML string.
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const pct = (p) => Math.round((Number(p) || 0) * 100);
@@ -7,7 +8,7 @@ function crest(t, side) {
   t = t || {};
   const color = /^#[0-9a-f]{3,8}$/i.test(t.color || "") ? t.color : `var(--${side})`;
   const inner = t.logo
-    ? `<img class="tl-crest-img" src="${esc(t.logo)}" alt="${esc(t.name)}" loading="lazy">`
+    ? `<img class="tl-crest-img" src="${esc(logoThumb(t.logo, 96))}" alt="${esc(t.name)}" decoding="async" width="48" height="48">`
     : `<span class="tl-badge" style="background:${color}">${esc(t.abbr || (t.name || "?").slice(0, 3).toUpperCase())}</span>`;
   return `<div class="tl-team tl-team-${side}">${inner}<span class="tl-team-name">${esc(t.name)}</span></div>`;
 }

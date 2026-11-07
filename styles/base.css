@@ -1,25 +1,29 @@
-:root{--bg:#0b1020;--card:#141a2e;--card2:#1b2240;--fg:#e8ecf7;--muted:#93a0c0;--accent:#19c37d;--home:#3b82f6;--away:#f59e0b;--yellow:#facc15;--red:#ef4444;--line:#232b4a;--r:14px;--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--bar:52px;--nav:58px}
+:root{--bg:#0b1020;--card:#141a2e;--card2:#1b2240;--fg:#e8ecf7;--muted:#a6b1cc;--accent:#19c37d;--home:#3b82f6;--away:#f59e0b;--yellow:#facc15;--red:#ef4444;--line:#232b4a;--r:14px;--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px);--bar:52px;--nav:58px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
-body{min-height:100vh;min-height:100dvh}
+body{min-height:100vh;min-height:100dvh;overscroll-behavior-y:contain;overflow-wrap:break-word}
 h2{font-size:1.25rem;margin:.4rem 0 .8rem}h3{font-size:1rem;margin:.2rem 0 .5rem}p{margin:.4rem 0;color:var(--muted)}
 a{color:var(--accent)}
 .tl-hidden{display:none !important}
-#tl-topbar{position:fixed;top:0;left:0;right:0;z-index:20;height:calc(var(--bar) + var(--sat));padding:var(--sat) max(14px,env(safe-area-inset-right)) 0 max(14px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:space-between;background:rgba(11,16,32,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+#tl-topbar{position:fixed;top:0;left:0;right:0;z-index:20;height:calc(var(--bar) + var(--sat));padding:var(--sat) max(14px,var(--sar)) 0 max(14px,var(--sal));display:flex;align-items:center;justify-content:space-between;background:rgba(11,16,32,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .tl-brand{display:flex;align-items:center;gap:8px}.tl-logo{border-radius:7px}
 .tl-name{font-weight:800;letter-spacing:.2px}.tl-beta{font-size:.65rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:0 5px;text-transform:uppercase}
 .tl-topbar-right{display:flex;align-items:center;gap:10px}
 .tl-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);display:inline-block}
-.tl-dot[data-status=live]{background:var(--accent);box-shadow:0 0 0 0 rgba(25,195,125,.6);animation:tl-pulse 1.8s infinite}
+/* live pulse runs on the compositor (transform/opacity), not box-shadow, so it does not repaint every frame */
+.tl-dot{position:relative}
+.tl-dot[data-status=live]{background:var(--accent)}
+.tl-dot[data-status=live]::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:tl-pulse 1.8s infinite;will-change:transform,opacity}
 .tl-dot[data-status=offline]{background:var(--red)}
-@keyframes tl-pulse{70%{box-shadow:0 0 0 8px rgba(25,195,125,0)}100%{box-shadow:0 0 0 0 rgba(25,195,125,0)}}
-.tl-icon-btn{background:none;border:0;color:var(--fg);font-size:1.4rem;width:40px;height:40px;border-radius:50%;cursor:pointer}
+@keyframes tl-pulse{0%{transform:scale(1);opacity:.6}70%,100%{transform:scale(2.6);opacity:0}}
+.tl-icon-btn{background:none;border:0;color:var(--fg);font-size:1.4rem;width:44px;height:44px;border-radius:50%;cursor:pointer}
 .tl-icon-btn:active{background:var(--card)}
-#tl-main{max-width:720px;margin:0 auto;padding:calc(var(--bar) + var(--sat) + 12px) max(12px,env(safe-area-inset-right)) calc(var(--nav) + var(--sab) + 16px) max(12px,env(safe-area-inset-left))}
-#tl-nav{position:fixed;left:0;right:0;bottom:0;z-index:20;height:calc(var(--nav) + var(--sab));padding-bottom:var(--sab);display:flex;justify-content:center;background:rgba(11,16,32,.96);border-top:1px solid var(--line)}
+#tl-main{max-width:720px;margin:0 auto;padding:calc(var(--bar) + var(--sat) + 12px) max(12px,var(--sar)) calc(var(--nav) + var(--sab) + 16px) max(12px,var(--sal))}
+#tl-nav{position:fixed;left:0;right:0;bottom:0;z-index:20;height:calc(var(--nav) + var(--sab));padding:0 var(--sar) var(--sab) var(--sal);display:flex;justify-content:center;background:rgba(11,16,32,.96);border-top:1px solid var(--line)}
 #tl-nav a{flex:1;max-width:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);text-decoration:none;font-size:.72rem}
 #tl-nav a.active{color:var(--accent)}.tl-ico{font-size:1.25rem;line-height:1}
-#tl-toasts{position:fixed;top:calc(var(--bar) + var(--sat) + 8px);left:50%;transform:translateX(-50%);width:min(94vw,520px);z-index:50;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+#tl-toasts{position:fixed;top:calc(var(--bar) + var(--sat) + 8px);left:50%;transform:translateX(-50%);width:min(calc(100vw - 24px - var(--sal) - var(--sar)),520px);z-index:50;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 #tl-toasts>*{pointer-events:auto;background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .tl-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:0 0 12px}
 .tl-btn{background:var(--accent);color:#04130c;border:0;border-radius:10px;padding:10px 16px;font-weight:700;font-size:.95rem;cursor:pointer}
@@ -33,8 +37,8 @@ select.tl-input{width:auto;margin:0}
 .tl-tabs{display:flex;gap:6px;overflow-x:auto;margin:0 0 12px;padding:2px}
 .tl-tabs button{flex:1;white-space:nowrap;background:var(--card);color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font:inherit;font-size:.9rem;cursor:pointer}
 .tl-tabs button.active{background:var(--card2);color:var(--fg);border-color:var(--accent)}
-.tl-skeleton{color:var(--muted);background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:200% 100%;animation:tl-shimmer 1.4s linear infinite}
-@keyframes tl-shimmer{to{background-position:-200% 0}}
+.tl-skeleton{color:var(--muted);animation:tl-shimmer 1.4s ease-in-out infinite alternate}
+@keyframes tl-shimmer{from{opacity:1}to{opacity:.55}}
 noscript .tl-card{margin:70px 12px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (min-width:760px){#tl-main{padding-top:calc(var(--bar) + var(--sat) + 20px)}#tl-topbar{padding-left:calc(50vw - 360px);padding-right:calc(50vw - 360px)}}
@@ -46,23 +50,23 @@ noscript .tl-card{margin:70px 12px}
 .tl-rp-fill{display:block;height:100%;background:var(--accent)}
 .tl-src{margin:10px 0 0;font-size:.72rem;color:var(--muted);text-align:center}
 .tl-prob-cap{font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:4px}
-.tl-err{color:var(--red)}
+.tl-err{color:#f87171}
 /* integrator: quick wins (sin bin, explainer, follow, players, watch, coverage) */
 .tl-muted{color:var(--muted)}
 .tl-sinbin .tl-chip{cursor:default;color:var(--fg)}
 .tl-sb-pill{border-color:var(--yellow)}
 .tl-sb-count{font-weight:700}
-.tl-explainer{position:relative;border-left:4px solid var(--accent);padding-right:44px}
+.tl-explainer{position:relative;border-left:4px solid var(--accent);padding-right:52px}
 .tl-explainer-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-.tl-explainer-x{position:absolute;top:8px;right:8px;width:32px;height:32px;padding:0;border-radius:50%;background:var(--card2);color:var(--fg);font-size:1.1rem;line-height:1}
+.tl-explainer-x{position:absolute;top:4px;right:4px;width:44px;height:44px;padding:0;border-radius:50%;background:var(--card2);color:var(--fg);font-size:1.1rem;line-height:1}
 .tl-explainer p{margin:.35rem 0;font-size:.9rem}
 .tl-follow-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:6px 0 2px}
-.tl-follow{background:var(--card2);color:var(--muted);padding:4px 10px;font-size:.85rem;font-weight:600;min-height:32px}
+.tl-follow{background:var(--card2);color:var(--muted);padding:4px 10px;font-size:.85rem;font-weight:600;min-height:44px;min-width:44px}
 .tl-follow.tl-on{color:var(--yellow);border:1px solid var(--yellow)}
 .tl-fx-star{color:var(--yellow);margin-left:3px;font-size:.85em}
 .tl-follow-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
 .tl-follow-chip{color:var(--fg);cursor:default}
-.tl-follow-x{background:none;border:0;color:var(--muted);font-size:1rem;padding:0 0 0 4px;cursor:pointer;line-height:1}
+.tl-follow-x{background:none;border:0;color:var(--muted);font-size:1rem;padding:0 0 0 4px;cursor:pointer;line-height:1;min-width:44px;min-height:44px}
 .tl-watch,.tl-cov-note{font-size:.8rem;margin:6px 0 0}
 .tl-form-row{display:flex;align-items:center;gap:8px;margin:4px 0}.tl-form-team{min-width:3.5em;font-weight:700;font-size:.85rem}
 .tl-h2h{font-size:.8rem}
@@ -75,3 +79,76 @@ noscript .tl-card{margin:70px 12px}
 .tl-pl-foot{font-size:.72rem;text-align:center}
 .tl-cov .tl-chip{cursor:default;margin:2px 0}.tl-cov .tl-chip.tl-cov-live{color:var(--accent)}.tl-cov .tl-chip.tl-cov-est{color:var(--yellow)}.tl-cov .tl-chip.tl-cov-miss{color:var(--red)}
 #match-header .tl-form{margin:10px 0 0;padding:10px;background:var(--card2)}
+/* ---- native feel on iOS Safari / Android Chrome (mobile pass) ---- */
+input,select,textarea{font-size:16px}  /* < 16px makes iOS Safari zoom on focus */
+button,a,select,label.tl-row,[role=button],summary{touch-action:manipulation}
+button,.tl-btn,.tl-chip,.tl-lchip,#tl-nav a{-webkit-user-select:none;user-select:none}
+button:active,.tl-btn:active,.tl-lchip:active,.tl-fx-row:active,#tl-nav a:active,.tl-chip:active{filter:brightness(1.18)}
+.tl-fx-row:active{background:var(--card2)}
+:focus:not(:focus-visible){outline:none}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tl-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* tap targets: every control >= 44x44 CSS px */
+#tl-install{min-height:44px}
+#tl-nav a{min-height:44px;min-width:44px}
+.tl-tabs button{min-height:44px}
+.tl-chip:is(button,a){min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
+.tl-row input[type=checkbox]{width:24px;height:24px;flex:none}
+.tl-row select.tl-input{min-height:44px;max-width:60%}
+.tl-row>span{min-width:0}
+.tl-pl-team summary{min-height:44px;display:flex;align-items:center}
+.tl-watch a,.tl-cov-note a,.tl-explainer a,#view-settings p a,#match-header p a,.tl-src a{display:inline-flex;align-items:center;min-height:44px;min-width:44px;padding:0 2px}
+.tl-fx-group{content-visibility:auto;contain-intrinsic-size:auto 320px}
+/* horizontal strips scroll inside themselves with momentum, no visible bar */
+.tl-chips,.tl-tabs{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;scroll-snap-type:x proximity}
+.tl-chips::-webkit-scrollbar,.tl-tabs::-webkit-scrollbar{display:none}
+.tl-lchip{scroll-snap-align:start}
+.tl-pl-team>div{-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;max-width:100%}
+.tl-view,.tl-card,.tl-panel{min-width:0;max-width:100%}
+.tl-fx-teams{flex-wrap:wrap;min-width:0}.tl-fx-team{min-width:0;overflow-wrap:anywhere}
+#tl-main p,#tl-main a,.tl-team-name,.tl-rp-title{overflow-wrap:anywhere}
+img{max-width:100%}
+/* install hint + settings row */
+.tl-install-hint{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:8px 8px 8px 14px}
+.tl-install-hint>span{flex:1}
+.tl-share-glyph{vertical-align:-3px}
+.tl-offline{border-left:4px solid var(--yellow);color:var(--fg)}
+/* battery: pause every CSS animation while the app is in the background */
+body.tl-bg *,body.tl-bg *::before,body.tl-bg *::after{animation-play-state:paused !important}
+/* landscape phones: compact chrome, header and pitch fit the short viewport */
+@media (orientation:landscape) and (max-height:500px){
+  :root{--bar:44px;--nav:48px}
+  #tl-nav a{flex-direction:row;gap:6px;font-size:.8rem}
+  #tl-main{padding-top:calc(var(--bar) + var(--sat) + 8px)}
+  .tl-header{padding:8px 10px;margin:0 0 8px}
+  .tl-header-top{margin-bottom:4px}
+  .tl-team{flex-direction:row;gap:8px}
+  .tl-team-name{text-align:left}
+  .tl-scoreline>.tl-team:last-child{flex-direction:row-reverse}
+  .tl-scoreline>.tl-team:last-child .tl-team-name{text-align:right}
+  .tl-crest-img,.tl-team .tl-badge{width:32px;height:32px}
+  .tl-score-n{font-size:30px}.tl-score-sep{font-size:24px}
+  .tl-prob{margin-top:8px}
+  .tl-pitch-svg{max-height:calc(100dvh - var(--bar) - var(--nav) - var(--sat) - var(--sab) - 150px);min-height:150px;width:100%}
+}
+/* wide landscape: match header beside the tabs + pitch */
+@media (orientation:landscape) and (min-width:700px) and (max-height:600px){
+  #tl-main{max-width:1100px}
+  #view-match:not(.tl-hidden){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);column-gap:12px;align-items:start}
+  #view-match>#tl-replaybar,#view-match>#match-postmatch{grid-column:1/-1}
+  .tl-match-side{grid-column:1}
+  .tl-match-main{grid-column:2}
+  #tl-topbar{padding-left:max(14px,var(--sal));padding-right:max(14px,var(--sar))}
+  .tl-pitch-svg{max-height:calc(100dvh - var(--bar) - var(--nav) - var(--sat) - var(--sab) - 130px)}
+}
+/* icons are inline SVG (no emoji font fallback on first layout) */
+svg.tl-ico{width:22px;height:22px;display:block}
+.tl-icon-btn{display:inline-flex;align-items:center;justify-content:center}
+/* fixtures skeleton shaped like the real list (paints at FCP, no layout jump when data lands) */
+.tl-skel-fx i{display:block;background:var(--card);border-radius:10px;animation:tl-shimmer 1.4s ease-in-out infinite alternate}
+.tl-skel-chips{display:flex;gap:.4rem;padding:.25rem 0 .75rem}.tl-skel-chips i{height:44px;width:30%;border-radius:999px}
+.tl-skel-fx .tl-skel-h{height:20px;width:40%;margin:1rem 0 .6rem;background:var(--card2)}
+.tl-skel-fx .tl-skel-row{height:64px;margin-bottom:.4rem}
+.tl-skel-txt{margin:0 0 .5rem;color:var(--muted)}
+/* load the bold font faces during the first layout (before first paint), not inside the fixtures render task */
+.tl-font-warm{position:absolute;left:-9999px;top:0;font-size:12px}.tl-font-warm .w6{font-weight:600}.tl-font-warm .w7{font-weight:700}.tl-font-warm .w8{font-weight:800}
