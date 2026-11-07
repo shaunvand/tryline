@@ -24,7 +24,7 @@ function scoreOf(m, k) {
 function reconcile(m) {
   const st = m.status || {}, maxSec = Math.max(0, ...(m.events || []).filter(e => e.period === st.period).map(e => +e.clockSec || 0));
   if (st.state !== "in" || !(maxSec > (st.clockSec || 0))) return m;
-  return { ...m, status: { ...st, clockSec: maxSec, clockLabel: `${Math.floor(maxSec / 60)}'` } };
+  return { ...m, status: { ...st, clockSec: maxSec, clockLabel: `${Math.floor(maxSec / 60)}'`, clockSource: "estimated" } };
 }
 
 export function createReplay(recording, { speed = 5, nowMs, timer } = {}) {

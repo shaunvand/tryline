@@ -87,6 +87,11 @@ export function mergeMatch(espn, wr, swapped = false) {
   if ((RANK[ws.state] ?? 0) > (RANK[es.state] ?? 0)) status = { ...ws, clockSource: "feed" };
   else if (ws.state === "in" && es.state === "in") status = { ...es, period: ws.period || es.period, label: ws.label || es.label,
     clockSec: ws.clockSec, clockLabel: ws.clockLabel, clockSource: "feed" };
+  // WR's match clock can freeze (seen 2026-11-07: stuck at 41' while events reached 50'): never trail the events
+  if (status.state === "in" && !/half time/i.test(status.label || "")) {
+    const evMax = Math.max(0, ...events.filter(e => e.period === status.period).map(e => +e.clockSec || 0));
+    if (evMax > (+status.clockSec || 0)) status = { ...status, clockSec: evMax, clockLabel: `${Math.floor(evMax / 60)}'`, clockSource: "estimated" };
+  }
   const wsc = sw({ home: Number(wr.home.score) || 0, away: Number(wr.away.score) || 0 });
   const useWrScore = ws.state !== "pre" && wsc.home + wsc.away >= (Number(espn.home.score) || 0) + (Number(espn.away.score) || 0);
   let hs = useWrScore ? wsc.home : espn.home.score, as = useWrScore ? wsc.away : espn.away.score;

@@ -109,3 +109,13 @@ test("mergeMatch: header score never trails the merged events' running score", (
   const m = mergeMatch(stale, wrStub, false);
   assert.deepEqual([m.home.score, m.away.score], [3, 40]);
 });
+
+test("mergeMatch: a frozen WR clock never trails the events and is marked estimated", () => {
+  const e = { id: "y", seq: 0, type: "try", period: 2, clockSec: 3033, teamId: espn.away.id, players: [], homeScore: 0, awayScore: 52, text: "" };
+  const wrStub = { id: "w", home: { id: "h", score: 0 }, away: { id: "a", score: 52 }, events: [e], lineups: null, stats: null, source: {},
+    status: { state: "in", period: 2, label: "2nd half", clockSec: 2502, clockLabel: "41'", clockSource: "feed" } };
+  const m = mergeMatch({ ...espn, events: [], status: { ...espn.status, state: "in" } }, wrStub, false);
+  assert.equal(m.status.clockSec, 3033);
+  assert.equal(m.status.clockLabel, "50'");
+  assert.equal(m.status.clockSource, "estimated");
+});
