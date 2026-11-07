@@ -4,3 +4,5 @@ data/history.json
 data/*.log
 node_modules/
 shots/
+_tmpcheck/
+recordings/_wr_*.json

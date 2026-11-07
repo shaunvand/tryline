@@ -41,4 +41,4 @@ with sync_playwright() as p:
     out["sw"] = pg.evaluate("navigator.serviceWorker.getRegistrations().then(r => r.map(x => x.scope + ' ' + (x.active && x.active.state)))")
     out["conn"] = pg.inner_text("#tl-conn-txt"); mark("nav")
     br.close()
-print(json.dumps(out, indent=1, ensure_ascii=False))
+print(json.dumps(out, indent=1, ensure_ascii=True))

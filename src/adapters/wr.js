@@ -146,7 +146,9 @@ export function buildWrMatch({ summary, stats, timeline, nowMs } = {}) {
   const sc = m.scores || [];
   const code = m.status;
   const st = statusOf(code, m.time);
-  const secs = code === "LHT" ? 2400 : num(m.clock?.secs) ?? 0;
+  let secs = code === "LHT" ? 2400 : num(m.clock?.secs) ?? 0;
+  // seen live 2026-11-07: in L2 the match clock restarts from 0 (01:42) while event times stay cumulative
+  if (code === "L2" && secs < 2400) secs += 2400;
   const home = { ...teamOf(teams[0], sc[0]), logo: null, color: null };
   const away = { ...teamOf(teams[1], sc[1]), logo: null, color: null };
   const { lineups, idx } = buildLineups(summary);
@@ -172,6 +174,8 @@ export function buildWrMatch({ summary, stats, timeline, nowMs } = {}) {
     if (pos) ev.pos = pos;
     return ev;
   });
+  // half-time subs share 40' with early 2nd-half events: order by half, then clock, then feed order
+  events.sort((a, b) => (a.period - b.period) || (a.clockSec - b.clockSec) || (a.seq - b.seq));
   return {
     id: String(m.matchId ?? ""), league: { id: String(m.events?.[0]?.id ?? ""), name: m.events?.[0]?.label || m.competition || "" },
     kickoff: m.time?.millis != null ? new Date(m.time.millis).toISOString().replace(/:\d\d\.\d+Z$/, "Z") : null,

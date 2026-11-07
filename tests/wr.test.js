@@ -68,3 +68,12 @@ test("normTeamName", () => {
   assert.equal(normTeamName("Union Bordeaux-Bègles"), "bordeaux");
   assert.equal(normTeamName("Italy"), "italy");
 });
+
+test("second-half clock that restarts from 0 is offset to match time", () => {
+  const sum = structuredClone(summary);
+  sum.match.status = "L2"; sum.match.clock = { secs: 102, label: "01:42" };
+  const m = buildWrMatch({ summary: sum, stats: null, timeline: null });
+  assert.equal(m.status.period, 2);
+  assert.equal(m.status.clockSec, 2502);
+  assert.equal(m.status.clockLabel, "41'");
+});
