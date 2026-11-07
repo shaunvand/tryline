@@ -165,7 +165,7 @@ async function refreshFixtures() {
       fullWeek = true;
       await replayModule();
       if (store.get().view === "fixtures") await refreshFixtures().catch(() => {});
-      idle(() => matchUi().catch(() => {}), 5000); // warm the match screen so a tap opens it at once
+      setTimeout(() => idle(() => matchUi().catch(() => {})), 8000); // warm the match screen so a tap opens it at once
     });
   }
 }
@@ -195,13 +195,14 @@ function renderFixturesView() {
     `<p class="tl-src">Times in ${esc(tzLabel())} · updated ${esc(hhmmss(st.fixturesAt))} · ESPN + World Rugby public feeds</p>`;
   paintFixtures(html);
 }
-// First paint of the list goes in one section per frame: the cold text layout of the whole list in one task
-// blocks the main thread for 100+ ms on a mid-range phone. Later refreshes swap the HTML in one go.
-let fxPainted = false;
+// The first two paints of the list (today+tomorrow, then the full week) go in one section per frame: the cold
+// text layout of the whole list in one task blocks the main thread for 100+ ms on a mid-range phone.
+// Later 60 s refreshes swap the HTML in one go (no scroll jump).
+let fxPaints = 0;
 function paintFixtures(html) {
   const view = $("#view-fixtures");
-  if (fxPainted) { view.innerHTML = html; return; }
-  fxPainted = true;
+  if (fxPaints >= 2) { view.innerHTML = html; return; }
+  fxPaints++;
   const t = document.createElement("template");
   t.innerHTML = html;
   const wrap = t.content.querySelector(".tl-fixtures");

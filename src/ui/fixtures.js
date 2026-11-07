@@ -3,7 +3,13 @@ import { fmtTime, fmtDay, tzLabel, getTimeZone } from "../time.js";
 // Fixture list renderer. Times and day groups use the time.js zone (device time unless the user picked one).
 const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ESC[c]);
-const dayKey = ms => new Intl.DateTimeFormat("en-CA", { ...(getTimeZone() ? { timeZone: getTimeZone() } : {}), year: "numeric", month: "2-digit", day: "2-digit" }).format(ms);
+const dkCache = new Map(); // one formatter per zone (construction is the slow part)
+const dayKey = ms => {
+  const z = getTimeZone() || "";
+  let f = dkCache.get(z);
+  if (!f) dkCache.set(z, f = new Intl.DateTimeFormat("en-CA", { ...(z ? { timeZone: z } : {}), year: "numeric", month: "2-digit", day: "2-digit" }));
+  return f.format(ms);
+};
 
 const kickMs = f => f.kickoffMs ?? (f.kickoff ? Date.parse(f.kickoff) : NaN);
 /** Kick-off time with zone label, e.g. "16:10 SAST" (name kept for older callers). */
