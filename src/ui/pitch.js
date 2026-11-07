@@ -64,6 +64,6 @@ export function renderPitch({ match, zone, momentum } = {}) {
   }
   return `<section class="tl-pitch">${badge}${pitchSvg(z, home, away)}` +
     `<div class="tl-pitch-ends"><span>Left: ${esc(home)} end</span><span>Right: ${esc(away)} end</span></div>` +
-    `<div class="tl-pitch-label">Schematic: the feed has no direction of play, and teams swap ends at half time</div>` +
+    `<div class="tl-pitch-note">Schematic: the feed has no direction of play, and teams swap ends at half time</div>` +
     `<div class="tl-pitch-label">${esc(z.label)} · ${esc(z.basis)}</div>${mom}</section>`;
 }

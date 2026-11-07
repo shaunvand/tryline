@@ -71,3 +71,4 @@
 .tl-stale .tl-live-dot { animation: none; }
 .tl-stale-msg { margin: 8px 0 0; font-size: .8rem; text-align: center; }
 .tl-banner { font-size: .85rem; }
+.tl-pitch-note { font-size: .72rem; color: var(--muted); margin: 2px 0 6px; }
